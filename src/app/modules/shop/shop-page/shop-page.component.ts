@@ -55,13 +55,15 @@ export class ShopPageComponent {
     const planId = this.planId$.getValue();
     const price = this.appQuery.plans.find(plan => plan.id === planId)?.price!;
     const balance = this.appQuery.balance;
+    const country = this.appQuery.country;
+    
+    if (!country) {
+      alert('Select country first!');
+      return;
+    }
     
     if (price > balance) {
-      this.toasterService.showToast({
-        type: ToastType.ERROR,
-        text: 'Insufficient balance',
-        autoClose: 2500
-      });
+      alert('Insufficient balance!');
       return;
     }
     
