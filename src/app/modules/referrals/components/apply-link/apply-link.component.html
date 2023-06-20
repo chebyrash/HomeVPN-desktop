@@ -1,0 +1,10 @@
+<ng-container *ngIf="showReferralPrompt$ | async">
+    <div class="title">
+        Apply referral link
+    </div>
+    <div class="text">
+        Use link received from another Home VPN user.
+    </div>
+    <input type="text" class="paste-link" placeholder="Paste referral link" [(ngModel)]="link">
+    <button class="button" (click)="applyLink()">Apply</button>
+</ng-container>

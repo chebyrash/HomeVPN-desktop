@@ -1,0 +1,14 @@
+<app-header [title]="'Settings'"></app-header>
+<div class="content-area">
+    <div class="settings-wrapper">
+        <!-- <app-language></app-language> -->
+        <app-user-id></app-user-id>
+        <app-version></app-version>
+        <div class="logout">
+            <div class="caption">
+                You signed in with Apple account
+            </div>
+            <button class="button" (click)="signOut()">Sign out</button>
+        </div>
+    </div>
+</div>

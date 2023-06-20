@@ -1,0 +1,32 @@
+<app-header [title]="'Balance'"></app-header>
+<div class="content-area">
+  <app-balance></app-balance>
+  <div class="section-title">Choose plan</div>
+  <div class="plans" *ngLet="currentPlan$ | async as currentPlan" [class.disabled]="currentPlan">
+    <ng-container *ngIf="plans$ | async as plans">
+      <div
+        class="plan"
+        *ngFor="let plan of plans"
+        (click)="select(plan.id, currentPlan)"
+        [class.selected]="(planId$ | async) === plan.id"
+      >
+        <div class="title">
+          {{ plan.name }}
+        </div>
+        <div class="duration">
+          {{ getDuration(plan.duration) }}
+        </div>
+        <div class="price">{{ plan.price }} points</div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="buy-points">
+    <div class="title">Buy points</div>
+    <div class="text">Download mobile application</div>
+  </div>
+  <div class="quick-ads">
+    <div class="title">Quick ads</div>
+    <div class="text">Download mobile application</div>
+  </div>
+  <div class="connect" *ngIf="planId$ | async" (click)="buy()">CONENCT</div>
+</div>

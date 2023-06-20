@@ -1,0 +1,17 @@
+@import 'mixins';
+
+app-language, app-user-id, app-version {
+    margin-bottom: 24px;
+}
+
+.settings-wrapper {
+    padding: 20px 24px;
+}
+
+.logout {
+    .caption {
+        padding: 24px 24px 20px 24px;
+        text-align: center;
+        @include font(16px, 22px, 400, rgba(0, 0, 0, 0.5));
+    }
+}

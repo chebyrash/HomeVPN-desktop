@@ -1,0 +1,1 @@
+export const WG_INTERFACE_NAME = 'homevpn';

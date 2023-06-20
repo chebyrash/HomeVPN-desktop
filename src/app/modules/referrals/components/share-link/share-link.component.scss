@@ -1,0 +1,38 @@
+@import "mixins";
+
+:host {
+  display: block;
+  padding: 20px;
+}
+
+.title {
+  @include font(20px, 24px, 700, rgba(0, 0, 0, 0.75));
+  margin-bottom: 6px;
+}
+
+.text {
+  @include font(14px, 20px, 400, rgba(0, 0, 0, 0.5));
+  margin-bottom: 18px;
+}
+
+.share-link {
+  .stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    @include font(14px, 20px, 400, rgba(0, 0, 0, 0.5));
+  }
+
+  .link {
+    padding: 11px 16px;
+    margin-bottom: 12px;
+    background: #f2f1ef;
+    border-radius: 10px;
+    @include font(17px, 22px, 400, #22272b);
+  }
+
+  .actions {
+    display: flex;
+    justify-content: space-between;
+  }
+}

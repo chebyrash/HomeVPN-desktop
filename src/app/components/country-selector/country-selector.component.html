@@ -1,0 +1,16 @@
+<ng-container *ngIf="countries$ | async as countries">
+  <div
+    class="country"
+    *ngFor="let country of countries"
+    (click)="selectCountry(country)"
+  >
+    <div class="flag">
+      <span>
+        {{ country.flag }}
+      </span>
+    </div>
+    <div class="name">
+      {{ country.name }}
+    </div>
+  </div>
+</ng-container>

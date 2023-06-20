@@ -1,0 +1,92 @@
+@import "mixins";
+
+:host {
+  display: block;
+  padding: 0 12px 12px 12px;
+}
+
+.connection {
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%;
+  height: 76px;
+  background: #000000;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+
+  .cap {
+    @include font(18px, 18px, 700, #fff);
+  }
+
+  .switch {
+    position: relative;
+    color: white;
+    display: flex;
+    align-items: center;
+    width: 100px;
+
+    .toggle {
+      width: 47px;
+      height: 32px;
+      background: #f2f1ef;
+      border-radius: 16px;
+      position: relative;
+      transition: all 0.3s ease-in-out;
+
+      .circle {
+        display: block;
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        width: 22px;
+        height: 22px;
+        border-radius: 100%;
+        background: #000;
+        transition: all 0.3s ease-in-out;
+        transform: translateX(0);
+        animation-delay: 0.1s;
+      }
+
+      &.on {
+        width: 66px;
+        background: #e7fe54;
+
+        .circle {
+          transform: translateX(34px);
+        }
+      }
+    }
+
+    .letters {
+      margin-left: 6px;
+      height: 32px;
+      max-width: 47px;
+
+      .f {
+        position: absolute;
+        transition: all 0.3s ease-in-out;
+
+        &.off {
+          opacity: 1;
+        }
+
+        &.on {
+          opacity: 0;
+        }
+      }
+
+      .n {
+        position: absolute;
+        right: 0;
+        transition: all 0.3s ease-in-out;
+
+        &.off {
+          opacity: 0;
+        }
+      }
+    }
+  }
+}

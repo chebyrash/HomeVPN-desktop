@@ -1,0 +1,51 @@
+:host {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.toast-list {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  & .toast-item {
+    pointer-events: all;
+  }
+
+  &.size-s {
+    & .toast-item:nth-child(n + 2) {
+      margin-top: 12px;
+    }
+  }
+
+  &.size-m {
+    & .toast-item:nth-child(n + 2) {
+      margin-top: 16px;
+    }
+  }
+
+  &.top-toasts {
+    &.size-s {
+      top: 10px;
+    }
+
+    &.size-m {
+      top: 24px;
+    }
+  }
+
+  &.bottom-toasts {
+    &.size-s {
+      bottom: 10px;
+    }
+
+    &.size-m {
+      bottom: 24px;
+    }
+  }
+}

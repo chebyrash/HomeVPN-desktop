@@ -1,0 +1,37 @@
+<div class="connection" (click)="switch(state)">
+    <div class="cap">
+        CONNECTION
+    </div>
+    <div class="switch">
+        <div class="toggle" [ngClass]="state">
+            <div class="circle"></div>
+        </div>
+        <div class="letters">
+            <div class="f" [ngClass]="state">
+                <svg xmlns="http://www.w3.org/2000/svg" width="47" height="32" viewBox="0 0 47 32" fill="none">
+                    <g clip-path="url(#clip0_1411_10548)">
+                    <path d="M0 31.7065H8.06396V19.8853H20.3467V13.7109H8.06396V6.48193H21.5771V0H0V31.7065Z" fill="#F2F1EF"/>
+                    <path d="M25.1367 31.7065H33.2007V19.8853H45.4834V13.7109H33.2007V6.48193H46.7139V0H25.1367V31.7065Z" fill="#F2F1EF"/>
+                    </g>
+                    <defs>
+                    <clipPath id="clip0_1411_10548">
+                    <rect width="47" height="32" fill="white"/>
+                    </clipPath>
+                    </defs>
+                </svg>
+            </div>
+            <div class="n" [ngClass]="state">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="32" viewBox="0 0 28 32" fill="none">
+                    <g clip-path="url(#clip0_1411_10522)">
+                    <path d="M0 31.7065H8.04199V13.2056H8.1958L20.9399 31.7065H27.7075V0H19.6655V18.3032H19.5117L6.8335 0H0V31.7065Z" fill="#E7FE54"/>
+                    </g>
+                    <defs>
+                    <clipPath id="clip0_1411_10522">
+                    <rect width="28" height="32" fill="white"/>
+                    </clipPath>
+                    </defs>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>

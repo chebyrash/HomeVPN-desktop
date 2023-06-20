@@ -1,0 +1,67 @@
+@import './styles/fonts.scss';
+@import 'ngx-toastr/toastr';
+
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    width: 450px;
+    height: 700px;
+}
+
+body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: 'Inter';
+    overflow-y: hidden;
+}
+
+.content-area {
+    background: #FFFFFF;
+    border-radius: 22px;
+    overflow-y: scroll;
+    height: 524px;
+    margin-bottom: 16px;
+    position: relative;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.button {
+    width: 100%;
+    display: block;
+    outline: none;
+    background: #2C2C2E;
+    border: 1px solid #38383A;
+    color:#FFFFFF;
+    border-radius: 12px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 22px;
+    text-align: center;
+    padding: 0 6px;
+    height: 44px;
+    cursor: pointer;
+}
+
+.toast-container {
+    pointer-events: all !important;
+    width: calc(100% - 48px);
+    top: 20px !important;
+    left: 24px !important;
+}
+
+.cdk-overlay-container {
+    top: 0;
+    position: absolute;
+    width: 450px;
+    height: 700px;
+    pointer-events: none;
+}

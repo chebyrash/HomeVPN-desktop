@@ -1,0 +1,47 @@
+@import 'mixins';
+
+nav.nav {
+    background: transparent;
+    width: 402px;
+    display: flex;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+
+    .link {
+        @include fixedSize(100px, 64px);
+        @include font(12px, 12px, 700, #000);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        transition: all .1s ease-in-out;
+        cursor: pointer;
+        border-radius: 10px;
+
+        svg {
+            margin-bottom: 9.7px;
+        }
+
+        &.active {
+            background: #000;
+            color: #fff;
+            pointer-events: none;
+
+            svg {
+                fill: white;
+            }
+        }
+
+        &:hover {
+            background: #000;
+            color: #fff;
+
+            svg {
+                fill: white;
+            }
+        }
+    }
+}

@@ -1,0 +1,14 @@
+<div class="fullscreen-dialog-root">
+  <div class="header">
+    <div class="close" (click)="close()">
+      <img src="/assets/icons/arrow-left.svg" alt=""> 
+      Back
+    </div>
+    <div class="title">
+      {{ dialogConfig.title }}
+    </div>
+  </div>
+  <div class="body">
+    <ng-template dialogContent></ng-template>
+  </div>
+</div>

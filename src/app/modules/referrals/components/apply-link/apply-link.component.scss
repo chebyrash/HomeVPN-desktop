@@ -1,0 +1,27 @@
+@import "mixins";
+
+:host {
+  display: block;
+  padding: 20px;
+}
+
+.title {
+  @include font(20px, 24px, 700, rgba(0, 0, 0, 0.75));
+  margin-bottom: 6px;
+}
+
+.text {
+  @include font(14px, 20px, 400, rgba(0, 0, 0, 0.5));
+  margin-bottom: 18px;
+}
+
+.paste-link {
+  margin-bottom: 12px;
+  padding: 11px 16px;
+  width: 100%;
+  background: #f2f1ef;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  @include font(17px, 22px, 400, #22272b);
+}

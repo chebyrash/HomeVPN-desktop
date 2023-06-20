@@ -1,0 +1,17 @@
+<ng-container *ngLet="link$ | async as link">
+  <div class="title">Share your referral link</div>
+  <div class="text">
+    Send it to friends with Home VPN installed on the device. Link can be
+    applied in field below.
+  </div>
+  <div class="share-link">
+    <div class="stats" *ngLet="stats$ | async as stats">
+      <div class="invited">Friends invited: {{ stats?.invited }}</div>
+      <div class="earned">Points earned: {{ stats?.earned }}</div>
+    </div>
+    <div class="link">
+      {{ link }}
+    </div>
+    <button class="button" (click)="copy(link)">Copy</button>
+  </div>
+</ng-container>

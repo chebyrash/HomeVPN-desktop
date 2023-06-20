@@ -1,0 +1,34 @@
+@import 'mixins';
+
+.journey {
+    width: 100%;
+    position: relative;
+    background: #000;
+    border-radius: 22px;
+    padding: 24px;
+
+    .title {
+        @include font(26px, 31px, 700, #fff);
+        margin-bottom: 20px;
+    }
+
+    .text {
+        @include font(18px, 25px, 400, rgba(255, 255, 255, 0.8));
+
+        &:nth-child(2) {
+            margin-bottom: 20px;
+        }
+
+        span {
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    }
+
+    img {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        border-bottom-right-radius: 22px;
+    }
+}

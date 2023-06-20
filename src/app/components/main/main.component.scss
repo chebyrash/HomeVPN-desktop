@@ -1,0 +1,28 @@
+:host {
+    height: 100%;
+    display: block;
+    background-color: #F2F1EF;
+    padding: 24px 24px 0 24px;
+}
+
+.loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    color: white;
+}
+
+// main.main {
+//     background: #FFFFFF;
+//     border-radius: 22px;
+//     overflow-y: scroll;
+//     height: 524px;
+//     margin-bottom: 16px;
+
+//     &::-webkit-scrollbar {
+//         display: none;
+//     }
+// }

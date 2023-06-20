@@ -1,0 +1,38 @@
+@import "mixins";
+
+:host {
+  display: block;
+  height: 100%;
+  padding: 12px 16px;
+}
+
+.country {
+  margin-bottom: 12px;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  padding: 16px 20px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  cursor: pointer;
+
+  .flag {
+    @include fixedSize(42px, 42px);
+    margin-right: 16px;
+    background: #e6e6e6;
+    border-radius: 100px;
+    display: grid;
+    place-items: center;
+
+    span {
+      position: relative;
+      font-size: 20px;
+      line-height: 20px;
+      left: 1px;
+    }
+  }
+  
+  .name {
+    @include font(22px, 22px, 600, #000);
+  }
+}

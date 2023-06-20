@@ -1,0 +1,10 @@
+@import 'mixins';
+
+:host {
+    display: block;
+}
+
+.title {
+    margin-bottom: 8px;
+    @include font(20px, 24px, 700, rgba(0, 0, 0, 0.75));
+}

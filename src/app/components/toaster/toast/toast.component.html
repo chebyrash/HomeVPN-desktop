@@ -1,0 +1,10 @@
+<div class="toast" [ngClass]="typeClass">
+  <div class="toast-body">
+    <div class="title" *ngIf="toast?.title">
+      {{ toast.title }}
+    </div>
+    <div class="text">
+      {{ toast.text }}
+    </div>
+  </div>
+</div>

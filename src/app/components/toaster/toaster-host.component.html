@@ -1,0 +1,25 @@
+<div class="toast-list top-toasts size-m">
+  <ng-container
+    *ngFor="let toast of topToasts$ | async"
+    [ngTemplateOutlet]="toastRef"
+    [ngTemplateOutletContext]="{toast}"
+  ></ng-container>
+</div>
+
+<div class="toast-list bottom-toasts size-m">
+  <ng-container
+    *ngFor="let toast of bottomToasts$ | async"
+    [ngTemplateOutlet]="toastRef"
+    [ngTemplateOutletContext]="{toast}"
+  ></ng-container>
+</div>
+
+<ng-template #toastRef let-toast="toast">
+  <extension-toast
+    @uinchFadeIn
+    class="toast-item"
+    size="m"
+    [toast]="toast"
+    (dispose)="onDispose($event)"
+  ></extension-toast>
+</ng-template>

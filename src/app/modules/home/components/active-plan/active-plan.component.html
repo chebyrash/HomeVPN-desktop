@@ -1,0 +1,68 @@
+<div class="active-plan" *ngIf="connection$ | async as state">
+    <ng-container *ngIf="currentPlan$ | async as currentPlan">
+        <ng-container *ngIf="!currentPlan.is_paid; else paidPlan">
+            <div class="plan" [class.active]="state === 'on'">
+                <div class="info">
+                    <div class="plan-code">
+                        {{ currentPlan.name }}
+                    </div>
+                    <div class="clock">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <g clip-path="url(#clip0_1312_21192)">
+                            <rect width="16" height="16" rx="8" fill="#CCCCCC"/>
+                            <path d="M8 0C6.23629 -2.1032e-08 4.52201 0.582838 3.1238 1.65786C1.72559 2.73289 0.721823 4.23984 0.268622 5.94433C-0.18458 7.64882 -0.0618104 9.4553 0.617835 11.0828C1.29748 12.7103 2.4959 14.0676 4.0267 14.9436C5.55751 15.8195 7.33488 16.1651 9.08237 15.9264C10.8299 15.6878 12.4495 14.8784 13.6894 13.6241C14.9293 12.3698 15.72 10.7409 15.9384 8.99074C16.1568 7.24061 15.7908 5.46735 14.8972 3.94677L8 8V0Z" fill="black"/>
+                            </g>
+                            <defs>
+                            <clipPath id="clip0_1312_21192">
+                            <rect width="16" height="16" fill="white"/>
+                            </clipPath>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+                <div class="timer">
+                    <ng-container *ngIf="timer$ | async as timer; else completed">
+                        <div class="countdown">
+                            {{ timer$ | async }}
+                        </div>
+                        <div class="remaining">
+                            remaining...
+                        </div>
+                    </ng-container>
+                    <ng-template #completed>
+                        Tariff ended
+                    </ng-template>
+                </div>
+            </div>
+            <div class="ip-info">
+                <div class="title">
+                    {{ state === 'on' ? 'IP ADDRESS WITH HOME VPN' : 'IP ADDRESS WITHOUT HOME VPN'}}
+                </div>
+                <div class="ip" *ngIf="ipInfo$ | async as ipInfo">
+                    {{ getFlagEmoji(ipInfo.country!) }} {{ ipInfo.ip }}
+                </div>
+            </div>
+            <img class="connection-guys" src="/assets/icons/connection-guys.svg" alt="">
+        </ng-container>
+        <ng-template #paidPlan>
+            <div class="paid-plan">
+                <div class="plan" [class.active]="state === 'on'">
+                    <div>
+                        {{ currentPlan.name }}
+                    </div>
+                    <div>
+                        UNTIL {{ currentPlan.end_date | date:'mediumDate' | uppercase }}
+                    </div>
+                </div>
+                <div class="ip-info">
+                    <div class="title">
+                        {{ state === 'on' ? 'IP ADDRESS WITH HOME VPN' : 'IP ADDRESS WITHOUT HOME VPN'}}
+                    </div>
+                    <div class="ip" *ngIf="ipInfo$ | async as ipInfo">
+                        {{ getFlagEmoji(ipInfo.country!) }} {{ ipInfo.ip }}
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </ng-container>
+</div>

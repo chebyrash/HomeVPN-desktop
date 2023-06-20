@@ -1,0 +1,1 @@
+export type WithRequiredProperty<T, K extends keyof T> = T & { [prop in K]-?: T[prop] };

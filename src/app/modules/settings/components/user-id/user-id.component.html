@@ -1,0 +1,9 @@
+<ng-container *ngLet="userId$ | async as userId">
+  <div class="title">User identifier</div>
+  <div class="id">
+    {{ userId }}
+  </div>
+  <button class="button" (click)="copyUserId(userId)">
+    Copy User identifier
+  </button>
+</ng-container>

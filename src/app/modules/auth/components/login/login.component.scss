@@ -1,0 +1,58 @@
+@import "mixins";
+
+:host {
+  display: block;
+  height: 100%;
+  position: relative;
+  background: #fff;
+  padding: 24px;
+}
+
+.cover {
+  margin-bottom: 24px;
+  @include fixedSize(402px, 226px);
+}
+
+.list {
+  .point {
+    &:not(:last-child) {
+      margin-bottom: 20px;
+    }
+
+    .title {
+      margin-bottom: 4px;
+      @include font(20px, 28px, 700, #000);
+    }
+    .text {
+      @include font(12px, 17px, 400, #000);
+    }
+  }
+}
+
+.actions {
+  position: absolute;
+  width: calc(100% - 48px);
+  bottom: 24px;
+
+  .sign-in-btn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000000;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    padding: 0;
+    @include font(16px, 40px, 400, #fff);
+
+    svg {
+      margin-right: 16px;
+    }
+
+    &:first-child {
+      margin-bottom: 12px;
+    }
+  }
+}

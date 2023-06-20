@@ -1,0 +1,14 @@
+<app-header></app-header>
+<div class="content-area">
+  <app-active-plan
+    *ngIf="currentPlan$ | async; else noActivePlan"
+  ></app-active-plan>
+  <div class="controls">
+    <app-destination></app-destination>
+    <app-connection [state]="(state$ | async) || 'off'" (onStateChange)="onStateChange($event)"></app-connection>
+  </div>
+</div>
+
+<ng-template #noActivePlan>
+  <app-journey></app-journey>
+</ng-template>

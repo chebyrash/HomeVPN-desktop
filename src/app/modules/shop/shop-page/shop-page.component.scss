@@ -1,0 +1,106 @@
+@import "mixins";
+
+.section-title {
+  @include font(14px, 16px, 600, rgba(44, 44, 46, 0.5));
+  padding: 16px 16px 0px 16px;
+}
+
+.plans {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  gap: 16px;
+  cursor: default;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .plan {
+    height: 150px;
+    padding: 16px;
+    position: relative;
+    background: #ffffff;
+    border: 1px solid #d0d0d0;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+    user-select: none;
+
+    .title {
+      @include font(17px, 22px, 900, #2c2c2e);
+      margin-bottom: 2px;
+      text-align: center;
+    }
+
+    .duration {
+      @include font(17px, 22px, 400, rgba(44, 44, 46, 0.5));
+      margin-bottom: 42px;
+      text-align: center;
+    }
+
+    .price {
+      padding: 4px 12px;
+      @include font(17px, 22px, 600, #e1e1e1);
+      background: #2c2c2e;
+      border: 2px solid #2c2c2e;
+      border-radius: 30px;
+      white-space: nowrap;
+      transition: all 0.1s ease-in-out;
+    }
+
+    &.selected {
+      border: 2px solid #000000;
+
+      .price {
+        background: #e7fe54;
+        border: 1px solid #cae901;
+        color: #000000;
+      }
+    }
+  }
+
+  &.disabled {
+    opacity: .5;
+    // pointer-events: none;
+    overflow-x: scroll;
+    cursor: default;
+  }
+}
+
+.connect {
+  position: absolute;
+  bottom: 16px;
+  cursor: pointer;
+  background: #e7fe54;
+  border: 1px solid #cae901;
+  border-radius: 12px;
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 22px;
+  color: #2c2c2e;
+  width: calc(100% - 32px);
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 16px;
+}
+
+.buy-points,
+.quick-ads {
+  padding: 0 24px;
+  .title {
+    @include font(20px, 24px, 700, rgba(0, 0, 0, 0.75));
+    margin-bottom: 6px;
+  }
+  .text {
+    @include font(14px, 20px, 400, rgba(0, 0, 0, 0.5));
+  }
+}
+.buy-points {
+  margin-bottom: 20px;
+}

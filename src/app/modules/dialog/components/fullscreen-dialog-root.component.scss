@@ -1,0 +1,59 @@
+@import 'mixins';
+
+:host {
+  display: block;
+  width: 100%;
+  top: -700px;
+  height: 700px;
+  position: relative;
+  background: #fff;
+  overflow: auto;
+}
+
+.fullscreen-dialog-root {
+  position: relative;
+
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 0 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 56px;
+    background: #fff;
+
+    .close {
+      position: absolute;
+      left: 0;
+      top: 16px;
+      left: 16px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+
+      img {
+        margin-right: 12px;
+      }
+    }
+
+    .left-action,
+    .right-action {
+      
+      display: grid;
+      place-items: center;
+      background: transparent;
+      transition: all 0.3s ease-in-out;
+      border-radius: 12px;
+
+      &:not(:empty) {
+        cursor: pointer;
+
+        &:hover {
+          background: #e8edfa;
+        }
+      }
+    }
+  }
+}

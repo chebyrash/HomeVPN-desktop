@@ -1,0 +1,20 @@
+@mixin font($size, $lineHeight, $weight, $color) {
+  font-size: $size;
+  font-weight: $weight;
+  line-height: $lineHeight;
+  color: $color;
+}
+
+@mixin font-mono($size, $lineHeight, $weight, $color) {
+  font-family: "JetBrains Mono";
+  @include font($size, $lineHeight, $weight, $color);
+}
+
+@mixin fixedSize($width, $height) {
+  width: $width;
+  min-width: $width;
+  max-width: $width;
+  height: $height;
+  min-height: $height;
+  max-height: $height;
+}

@@ -1,0 +1,18 @@
+@import 'mixins';
+
+.destination {
+    display: flex;
+    align-items: center;
+    padding: 0 24px 26px 24px;
+    cursor: pointer;
+    @include font(18px, 18px, 700, #000);
+
+    .flag {
+        margin-right: 6px;
+    }
+
+    svg {
+        position: absolute;
+        right: 24px;
+    }
+}
