@@ -8,7 +8,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "kill_port": "sudo kill $(sudo lsof -t -i:443)"
+    "kill_port": "sudo kill $(sudo lsof -t -i:443)",
+    "build_docs": "ng build --output-path docs --base-href https://chebyrash.github.io/HomeVPN-desktop/"
   },
   "private": true,
   "dependencies": {

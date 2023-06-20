@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, from, tap } from 'rxjs';
 import { MainResponse } from 'src/app/models/interfaces/main-response.interface';
-import { environment } from 'src/environment/environment';
+import { environment } from 'src/environments/environment';
 import { ConnectResponse } from '../models/interfaces/connect-response.interface';
 import { SystemInfo } from '../models/interfaces/system-info.interface';
 import { ErrorService } from './error.service';
