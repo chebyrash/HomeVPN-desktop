@@ -54,6 +54,7 @@ export class AppService {
       public_key: publicKey
     }).pipe(
       switchMap(response => {
+        console.log({ connectionResponse: response })
         return this.darwinService.updateWgConfig(response, privateKey);
       }),
       switchMap(() => this.loadMain())
