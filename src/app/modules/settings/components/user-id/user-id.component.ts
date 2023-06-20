@@ -1,6 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ToastType } from 'src/app/components/toaster/enums/toast-type.enum';
-import { ToasterService } from 'src/app/services/toastr.service';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AppQuery } from 'src/app/state/app.query';
 
 @Component({
@@ -12,19 +10,12 @@ import { AppQuery } from 'src/app/state/app.query';
 export class UserIdComponent {
   public readonly userId$ = this.appQuery.userId$;
 
-  constructor(
-    private readonly appQuery: AppQuery,
-    private readonly toasterService: ToasterService
-  ) {}
+  constructor(private readonly appQuery: AppQuery) {}
 
   public async copyUserId(userId: string | null | undefined): Promise<void> {
     if (userId) {
       await navigator.clipboard.writeText(userId);
-      this.toasterService.showToast({
-        type: ToastType.INFO,
-        text: 'user id copied!',
-        autoClose: 2000
-      })
+      alert('User identifier copied!');
     }
   }
 }

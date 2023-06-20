@@ -6,8 +6,6 @@ import {
   Router,
 } from '@angular/router';
 import { CurrentPlan } from 'src/app/models/interfaces/current-plan.interface';
-import { ToasterService } from 'src/app/services/toastr.service';
-import { ToastType } from 'src/app/components/toaster/enums/toast-type.enum';
 
 @Component({
   selector: 'app-shop-page',
@@ -26,7 +24,6 @@ export class ShopPageComponent {
     private readonly appQuery: AppQuery,
     private readonly appService: AppService,
     private readonly router: Router,
-    private readonly toasterService: ToasterService
   ) {}
 
   public getDuration(minutes: number): string {
