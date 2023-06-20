@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Toast } from 'ngx-toastr';
 import { ToastType } from 'src/app/components/toaster/enums/toast-type.enum';
 import { ToasterService } from 'src/app/services/toastr.service';
 import { AppQuery } from 'src/app/state/app.query';
