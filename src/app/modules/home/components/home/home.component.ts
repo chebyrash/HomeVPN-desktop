@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EMPTY, of, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, EMPTY, of, switchMap, take, tap } from 'rxjs';
 import { AppQuery } from 'src/app/state/app.query';
 import { AppService } from 'src/app/state/app.service';
 
@@ -14,6 +14,8 @@ export class HomeComponent implements OnInit {
   public readonly state$ = this.appQuery.state$;
 
   public readonly currentPlan$ = this.appQuery.currentPlan$;
+
+  public readonly loading$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private readonly appQuery: AppQuery,
@@ -105,16 +107,20 @@ export class HomeComponent implements OnInit {
     }
 
     if (currentPlan.is_paid) {
+      this.loading$.next(true);
       return this.appService.connectionInit(country.id).pipe(
         switchMap(() => {
           return this.appService.wgUp();
         })
       ).subscribe(() => {
         this.appService.setConnection('on');
+        this.loading$.next(false);
       })
     } else {
+      this.loading$.next(true);
       return this.appService.wgUp().subscribe(() => {
         this.appService.setConnection('on');
+        this.loading$.next(false);
       });
     }
   }

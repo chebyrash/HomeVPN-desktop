@@ -5,7 +5,11 @@
   ></app-active-plan>
   <div class="controls">
     <app-destination></app-destination>
-    <app-connection [state]="(state$ | async) || 'off'" (onStateChange)="onStateChange($event)"></app-connection>
+    <app-connection
+      [state]="(state$ | async) || 'off'"
+      [loading]="(loading$ | async)!"
+      (onStateChange)="onStateChange($event)"
+    ></app-connection>
   </div>
 </div>
 
