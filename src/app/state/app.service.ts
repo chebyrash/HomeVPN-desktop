@@ -2,20 +2,16 @@ import { Injectable } from '@angular/core';
 import { AppStore } from './app.store';
 import { ApiService } from '../services/api.service';
 import {
-  EMPTY,
   Observable,
-  catchError,
-  combineLatest,
+  distinctUntilKeyChanged,
+  filter,
   from,
-  map,
   of,
   switchMap,
   tap,
 } from 'rxjs';
 import { MainResponse } from '../models/interfaces/main-response.interface';
 import { Country } from '../models/interfaces/country.interface';
-import { MacosPlatformService } from '../services/platform/macos-platform.service';
-import { Router } from '@angular/router';
 import { CountrySelectorComponent } from '../components/country-selector/country-selector.component';
 import { DialogRef, DialogService } from '../modules/dialog';
 import { DarwinService } from '../services/platform/darwin-platform.service';
@@ -29,10 +25,32 @@ export class AppService {
     private readonly store: AppStore,
     private readonly apiService: ApiService,
     private readonly dialogService: DialogService,
-    private readonly router: Router,
     private readonly darwinService: DarwinService,
     private readonly appQuery: AppQuery
   ) {}
+
+  public watchCountryChange(): Observable<unknown> {
+    return this.appQuery.country$.pipe(
+      filter(Boolean),
+      distinctUntilKeyChanged('id')
+    ).pipe(
+      switchMap(() => {
+        const currentConnection = this.appQuery.currentConnection;
+        const country = this.appQuery.country!;
+        if (currentConnection && currentConnection.country !== country.id) {
+          return this.wgDown().pipe(
+            switchMap(() => this.connectionInit(country.id)),
+            switchMap(() => this.wgUp())
+          )
+        }
+        return of(null);
+      })
+    );
+  }
+
+  public checkIsWgUp() {
+    return this.wgUp().subscribe(console.log);
+  }
 
   public purchasePlan(planId: string): Observable<unknown> {
     return this.apiService.purchasePlan(planId).pipe(
@@ -51,7 +69,7 @@ export class AppService {
   public connectionInit(country?: string) {
     const { privateKey, publicKey } = window.wireguard.generateKeypair();
     return this.apiService.connect({ 
-      country: country || this.appQuery.country?.id!, 
+      country: this.appQuery.country?.id!, 
       public_key: publicKey
     }).pipe(
       switchMap(response => {

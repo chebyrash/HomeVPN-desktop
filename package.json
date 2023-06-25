@@ -9,7 +9,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "kill_port": "sudo kill $(sudo lsof -t -i:443)",
-    "build_docs": "ng build --output-path docs --base-href https://desktop.homevpn.org/ && cp ./CNAME ./docs/CNAME && cp ./docs/index.html ./docs/404.html"
+    "build_docs": "ng build --configuration production --output-path docs --base-href https://desktop.homevpn.org/ && cp ./CNAME ./docs/CNAME && cp ./docs/index.html ./docs/404.html"
   },
   "private": true,
   "dependencies": {

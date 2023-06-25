@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '../../../../services/auth.service';
 declare const google: any;
 @Component({
@@ -8,6 +8,8 @@ declare const google: any;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent implements OnInit, AfterViewInit {
+  @ViewChild('googleAuthBtn', { static: true }) private readonly googleAuthBtn: ElementRef<HTMLDivElement>;
+
   constructor(private readonly authService: AuthService) {}
 
   ngOnInit(): void {
@@ -25,10 +27,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
     });
     // You can skip the next instruction if you don't want to show the "Sign-in" button
     google.accounts.id.renderButton(
-      document.getElementById("g_id_onload"), // Ensure the element exist and it is a div to display correcctly
+      this.googleAuthBtn.nativeElement, // Ensure the element exist and it is a div to display correcctly
       { theme: "outline", size: "large" }  // Customization attributes
     );
-    // google.accounts.id.prompt();
   }
 
   async login(provider: 'apple' | 'google'): Promise<void> {
@@ -38,7 +39,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
     if (provider === 'google') {
       await this.authService.googleLogin();
-      // google.accounts.id.prompt();
     }
   }
 }

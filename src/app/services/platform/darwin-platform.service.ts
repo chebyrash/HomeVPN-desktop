@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { WG_INTERFACE_NAME } from 'src/app/models/constants/wg-interface-name.const';
 import { ConnectResponse } from 'src/app/models/interfaces/connect-response.interface';
 import { getConfig } from 'src/app/utils/get-config';
 

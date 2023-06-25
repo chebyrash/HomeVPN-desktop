@@ -12,7 +12,6 @@ export interface AppState {
 
 export const APP_INITIAL_STATE: AppState = {
     main: null,
-    // connection: (localStorage.getItem('lastWgState') as 'on' | 'off') || 'off',
     connection: 'off',
     country: lastActiveCountry ? JSON.parse(lastActiveCountry) as Country : null,
     restored: false
