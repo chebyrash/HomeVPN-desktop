@@ -4,6 +4,7 @@ import { ApiService } from '../services/api.service';
 import {
   EMPTY,
   Observable,
+  catchError,
   combineLatest,
   from,
   map,
@@ -82,11 +83,19 @@ export class AppService {
     this.store.update({ country });
   }
 
-  public applyLink(link: string): Observable<unknown> {
+  public applyLink(link: string): Observable<any> {
     const code = link.split('/').pop() as string;
     return this.apiService
       .applyCode(code)
-      .pipe(switchMap(() => this.loadMain()));
+      .pipe(
+        switchMap((response: any) => {
+          if (response.error) {
+            return of(response);
+          }
+
+          return this.loadMain();
+        })
+      );
   }
 
   public openCountrySelector(): DialogRef<Country> {

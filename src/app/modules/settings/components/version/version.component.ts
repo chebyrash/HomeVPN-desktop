@@ -7,5 +7,5 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VersionComponent {
-  public readonly appVersion = localStorage.getItem('appVersion') || '1.0';
+  public readonly appVersion = localStorage.getItem('appVersion') || '0.0.0-beta.0';
 }

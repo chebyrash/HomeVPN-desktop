@@ -23,7 +23,6 @@ export class ApiService {
                         "Authorization": `Bearer ${localStorage.getItem('token')}`,
                         "User-Agent": "HomeVPN/desktop",
                         "HomeVPN-App-Version": environment.appVersion,
-                        "HomeVPN-Device-ID": environment.deviceId,
                         "HomeVPN-Device-Model": systemInfo.model,
                         "HomeVPN-Device-OS": systemInfo.os,
                         "HomeVPN-Device-OS-Version": systemInfo.osVersion,
@@ -63,13 +62,13 @@ export class ApiService {
         ) as Observable<ConnectResponse>;
     }
 
-    public applyCode(code: string): Observable<{ delta: number}> {
+    public applyCode(code: string): Observable<{ delta: number} | {error: string}> {
         return from(
             this.bridge.invoke(
                 'api',
                 { action: 'post', payload: { url: '/promo/apply', data: { code } } }
             )
-        ) as Observable<{ delta: number }>;
+        ) as Observable<{ delta: number } | {error: string}>;
     }
 
     public async overrideUseragent(): Promise<unknown> {

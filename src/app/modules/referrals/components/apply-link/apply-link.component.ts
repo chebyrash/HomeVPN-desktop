@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AppService } from 'src/app/state/app.service';
 import { AppQuery } from 'src/app/state/app.query';
+import { catchError } from 'rxjs';
 
 @Component({
     selector: 'app-apply-link',
@@ -20,7 +21,14 @@ export class ApplyLinkComponent {
 
     public applyLink(): void {
         if (this.link) {
-            this.appService.applyLink(this.link).subscribe();
+            this.appService.applyLink(this.link).pipe(
+            ).subscribe((result) => {
+                if (result.error) {
+                    alert(result.error);
+                } else {
+                    alert('Referral code applied!');
+                }
+            });
         }
     }
 }

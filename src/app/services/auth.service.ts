@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ErrorService } from 'src/app/services/error.service';
 
 declare const AppleID: any;
+declare const google: any;
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +15,18 @@ export class AuthService {
     ) {}
 
     public async googleLogin(): Promise<void> {
-        console.log(window.gapi);   
+        try {
+            (window as any).google.accounts.id.initialize({
+                client_id: '318603230447-6qjgeco2187epkkbtkid4tc5fv65efdg.apps.googleusercontent.com',
+                context: 'signin',
+                callback: (data: any) => {
+                    console.log(data);
+                }
+            });
+            google.accounts.id.prompt();
+        } catch(error) {
+            console.log(error);
+        }
     }
 
     public async appleLogin(): Promise<void> {
