@@ -74,7 +74,7 @@ export class ShopPageComponent {
         })
       ).subscribe(() => {
         this.appService.setConnection('on');
-        this.router.navigate(['/home', { forceConnect: false }]);
+        this.router.navigate(['/home']);
       });
     }
   }
