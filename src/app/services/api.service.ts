@@ -4,13 +4,10 @@ import { MainResponse } from 'src/app/models/interfaces/main-response.interface'
 import { environment } from 'src/environments/environment';
 import { ConnectResponse } from '../models/interfaces/connect-response.interface';
 import { SystemInfo } from '../models/interfaces/system-info.interface';
-import { ErrorService } from './error.service';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
     private readonly bridge = window.electron;
-
-    constructor() {}
 
     public async init(systemInfo: SystemInfo): Promise<void> {
         try {

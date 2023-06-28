@@ -16,11 +16,9 @@ import { SystemInfo } from './models/interfaces/system-info.interface';
 
 function initializeApp(): () => Promise<void> {
   return async () => {
-    console.log(window.electron);
     return window.electron
       .invoke('shell', { action: 'get_system_info' })
       .then((systemInfo: SystemInfo) => {
-        console.log('>>>>>>>>>', systemInfo);
         localStorage.setItem('systemInfo', JSON.stringify(systemInfo));
       });
   };

@@ -92,7 +92,6 @@ export class AppService {
   }
 
   public setConnection(state: 'on' | 'off'): void {
-    localStorage.setItem('lastWgState', state);
     this.store.update({ connection: state });
   }
 

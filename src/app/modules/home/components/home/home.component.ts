@@ -73,6 +73,7 @@ export class HomeComponent implements OnInit {
           this.appService.setConnection('on');
           this.loading$.next(false);  
         })
+        return;
       } else {
         this.appService.connectionInit(country.id).pipe(
           switchMap(() => {
@@ -82,13 +83,19 @@ export class HomeComponent implements OnInit {
           this.appService.setConnection('on');
           this.loading$.next(false);
         })
+        return;
       }
     } else {
       this.loading$.next(true);
-      this.appService.wgUp().subscribe(() => {
+      this.appService.connectionInit(country.id).pipe(
+        switchMap(() => {
+          return this.appService.wgUp();
+        })
+      ).subscribe(() => {
         this.appService.setConnection('on');
         this.loading$.next(false);
-      });
+      })
+      return;
     }
   }
 }
