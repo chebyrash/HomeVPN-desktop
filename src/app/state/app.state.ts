@@ -7,12 +7,10 @@ export interface AppState {
     main: MainResponse | null;
     connection: 'on' | 'off',
     country: Country | null,
-    restored: boolean,
 }
 
 export const APP_INITIAL_STATE: AppState = {
     main: null,
     connection: 'off',
     country: lastActiveCountry ? JSON.parse(lastActiveCountry) as Country : null,
-    restored: false
 }

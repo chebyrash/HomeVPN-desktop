@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { DarwinService } from "./platform/darwin-platform.service";
+import { AppService } from "../state/app.service";
 
 declare const AppleID: any;
 
@@ -10,7 +11,8 @@ declare const AppleID: any;
 export class AuthService {
   constructor(
     private readonly router: Router,
-    private readonly darwinService: DarwinService
+    private readonly darwinService: DarwinService,
+    private readonly appService: AppService
   ) {}
 
   public async googleLogin(): Promise<void> {
@@ -46,6 +48,11 @@ export class AuthService {
 
   public signOut(): void {
     localStorage.removeItem("token");
-    this.router.navigate(["login"]).then(() => this.darwinService.wgDown());
+    this.appService.reset();
+    this.router.navigate(["login"]).then(() => {
+      localStorage.removeItem('country');
+      localStorage.removeItem('auth_provider');
+      return this.darwinService.wgDown();
+    });
   }
 }

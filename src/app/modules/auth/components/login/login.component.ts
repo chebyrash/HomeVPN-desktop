@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AuthService } from '../../../../services/auth.service';
+import { AppService } from 'src/app/state/app.service';
+import { AppQuery } from 'src/app/state/app.query';
 
 @Component({
   selector: 'app-login',

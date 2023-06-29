@@ -77,8 +77,6 @@ export class AppQuery extends Query<AppState> {
         map(referrals => referrals.show_referral_prompt)
     );
 
-    public restored$ = this.select('restored');
-
     public delta$ = this.referrals$.pipe(map((referrals) => {
         return referrals.delta;
     }));

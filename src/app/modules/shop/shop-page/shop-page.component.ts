@@ -20,6 +20,8 @@ export class ShopPageComponent {
 
   public readonly planId$ = new BehaviorSubject<string>('');
 
+  public readonly loading$ = new BehaviorSubject<boolean>(false);
+
   constructor(
     private readonly appQuery: AppQuery,
     private readonly appService: AppService,
@@ -65,6 +67,7 @@ export class ShopPageComponent {
     }
     
     if (planId) {
+      this.loading$.next(true);
       this.appService.purchasePlan(planId).pipe(
         switchMap(() => {
           return this.appService.connectionInit();
@@ -73,6 +76,7 @@ export class ShopPageComponent {
           return this.appService.wgUp();
         })
       ).subscribe(() => {
+        this.loading$.next(false);
         this.appService.setConnection('on');
         this.router.navigate(['/home']);
       });

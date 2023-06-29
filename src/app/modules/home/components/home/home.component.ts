@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, of, switchMap } from 'rxjs';
+import { BehaviorSubject, Subscription, of, switchMap } from 'rxjs';
 import { AppQuery } from 'src/app/state/app.query';
 import { AppService } from 'src/app/state/app.service';
 
@@ -17,6 +17,8 @@ export class HomeComponent implements OnInit {
 
   public readonly loading$ = new BehaviorSubject<boolean>(false);
 
+  public watchCountrySub$:Subscription;
+
   constructor(
     private readonly appQuery: AppQuery,
     private readonly appService: AppService,
@@ -24,8 +26,7 @@ export class HomeComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    this.appService.watchCountryChange().pipe(
-    ).subscribe();
+    this.watchCountrySub$ = this.appService.watchCountryChange().subscribe();
   }
 
   public onStateChange(state: 'on' | 'off'): void {
@@ -97,5 +98,9 @@ export class HomeComponent implements OnInit {
       })
       return;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.watchCountrySub$.unsubscribe();
   }
 }

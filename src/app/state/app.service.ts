@@ -126,7 +126,8 @@ export class AppService {
     });
   }
 
-  public setRestored(restored: boolean): void {
-    this.store.update({ restored });
+  public reset(): void {
+    this.store.update({ connection: 'off' });
+    this.store.reset();
   }
 }
