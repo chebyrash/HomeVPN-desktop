@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AppStore } from './app.store';
 import { ApiService } from '../services/api.service';
 import {
+  EMPTY,
   Observable,
   distinctUntilKeyChanged,
   filter,
@@ -82,6 +83,12 @@ export class AppService {
 
   public loadMain(): Observable<MainResponse> {
     return this.apiService.getMain().pipe(
+      switchMap((response: any) => {
+        if (response.error) {
+          return EMPTY;
+        }
+        return of(response);
+      }),
       tap((MAIN) => {
         console.log({ MAIN });
       }),

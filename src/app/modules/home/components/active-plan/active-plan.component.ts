@@ -30,9 +30,11 @@ export class ActivePlanComponent implements OnInit {
                     let timer: string = '';
 
                     if (remainingTime <= 0) {
-                        this.appService.setConnection('off')
-                        return this.appService.loadMain().pipe(
-                            switchMap(() => this.appService.wgDown()),
+                        this.appService.setConnection('off');
+                        return this.appService.wgDown().pipe(
+                            switchMap(() => {
+                                return this.appService.loadMain();
+                            }),
                             switchMap(() => EMPTY)
                         );
                     }

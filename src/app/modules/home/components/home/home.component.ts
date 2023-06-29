@@ -70,10 +70,14 @@ export class HomeComponent implements OnInit {
     if (currentPlan.is_paid) {
       this.loading$.next(true);
       if (this.appQuery.currentConnection) {
-        this.appService.wgUp().subscribe(() => {
+        this.appService.connectionInit(country.id).pipe(
+          switchMap(() => {
+            return this.appService.wgUp();
+          })
+        ).subscribe(() => {
           this.appService.setConnection('on');
           this.loading$.next(false);  
-        })
+        });
         return;
       } else {
         this.appService.connectionInit(country.id).pipe(
@@ -83,7 +87,7 @@ export class HomeComponent implements OnInit {
         ).subscribe(() => {
           this.appService.setConnection('on');
           this.loading$.next(false);
-        })
+        });
         return;
       }
     } else {
