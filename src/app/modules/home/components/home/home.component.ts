@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription, of, switchMap } from 'rxjs';
+import { DarwinService } from 'src/app/services/platform/darwin-platform.service';
 import { AppQuery } from 'src/app/state/app.query';
 import { AppService } from 'src/app/state/app.service';
 
@@ -22,10 +23,12 @@ export class HomeComponent implements OnInit {
   constructor(
     private readonly appQuery: AppQuery,
     private readonly appService: AppService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly darwinService: DarwinService
   ) {}
 
   public ngOnInit(): void {
+    this.darwinService.executeCommand('networksetup -setv6off "Wi-Fi" || true', true);
     this.watchCountrySub$ = this.appService.watchCountryChange().subscribe();
   }
 

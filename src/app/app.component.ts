@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DarwinService } from './services/platform/darwin-platform.service';
 
 @Component({
   selector: 'app-root',
