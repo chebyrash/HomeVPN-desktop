@@ -28,8 +28,33 @@ export class HomeComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    this.darwinService.executeCommand('networksetup -setv6off "Wi-Fi" || true', true);
+    this.turnOffIpv6();
+    this.installXcodeTools();
     this.watchCountrySub$ = this.appService.watchCountryChange().subscribe();
+  }
+
+  public turnOffIpv6(): void {
+    this.darwinService.executeCommand('networksetup -setv6off "Wi-Fi" || true', true);
+  }
+
+  public installXcodeTools(): void {
+    const { username: user } = window.systemInfo();
+    this.darwinService.executeCommand('make').catch((error) => {
+      if (error.originalStack.includes('command not found')) {
+        document.getElementById('global-loader')!.style.display = 'flex';
+        return this.darwinService.executeCommand('xcode-select --install', true).then(() => {
+          return this.darwinService.executeCommand(`WITH_BASHCOMPLETION=no WITH_SYSTEMDUNITS=no WITH_WGQUICK=yes PREFIX=/usr/local make -C /Users/${user}/.homevpn/wireguard-tools/src install && chmod 777 /usr/local/bin/wg-quick`, true)
+        }).then(() => {
+          return this.darwinService.executeCommand('uname -a').then((response) => {
+            const bashBin = response.result.stdout.includes('arm64') ? 'bash_mac_arm' : 'bash_mac_amd64';
+            return this.darwinService.executeCommand(`/Users/${user}/.homevpn/overwrite-shebang.sh ${user} ${bashBin}`, true);
+          });
+        }).then(() => {
+          document.getElementById('global-loader')!.style.display = 'none';
+        })
+      }
+      return undefined;
+    });
   }
 
   public onStateChange(state: 'on' | 'off'): void {
