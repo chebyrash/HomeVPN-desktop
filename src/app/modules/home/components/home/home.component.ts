@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit {
   public installXcodeTools(): void {
     const { username: user } = window.systemInfo();
     this.darwinService.executeCommand('make').catch((error) => {
-      if (error.originalStack.includes('command not found')) {
+      if (JSON.stringify(error)?.includes('command not found')) {
         document.getElementById('global-loader')!.style.display = 'flex';
         return this.darwinService.executeCommand('xcode-select --install', true).then(() => {
           return this.darwinService.executeCommand(`WITH_BASHCOMPLETION=no WITH_SYSTEMDUNITS=no WITH_WGQUICK=yes PREFIX=/usr/local make -C /Users/${user}/.homevpn/wireguard-tools/src install && chmod 777 /usr/local/bin/wg-quick`, true)
