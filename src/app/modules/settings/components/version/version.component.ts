@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-version',
@@ -7,5 +8,5 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VersionComponent {
-  public readonly appVersion = localStorage.getItem('appVersion') || '1.0.0-beta.0';
+  public readonly appVersion = environment.appVersion;
 }

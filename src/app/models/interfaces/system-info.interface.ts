@@ -1,6 +1,12 @@
 export interface SystemInfo {
-    username: string;
-    os: string;
-    osVersion: string;
-    model: string;
+    arch: string;
+    os_version: string;
+    platform: string;
+    user: {
+        gid: number;
+        homedir: string;
+        shell: string;
+        uid: number;
+        username: string;
+    }
 }

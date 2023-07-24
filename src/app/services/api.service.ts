@@ -20,9 +20,6 @@ export class ApiService {
                         "Authorization": `Bearer ${localStorage.getItem('token')}`,
                         "User-Agent": "HomeVPN/desktop",
                         "HomeVPN-App-Version": environment.appVersion,
-                        "HomeVPN-Device-Model": systemInfo.model,
-                        "HomeVPN-Device-OS": systemInfo.os,
-                        "HomeVPN-Device-OS-Version": systemInfo.osVersion,
                     }
                 }
             });
@@ -58,6 +55,7 @@ export class ApiService {
             )
         ).pipe(switchMap((response: any) => {
             if (response.error) {
+                console.log(response.error);
                 alert('Something went wrong');
                 return EMPTY;
             }

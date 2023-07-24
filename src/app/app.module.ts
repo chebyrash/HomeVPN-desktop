@@ -25,13 +25,13 @@ function initializeApp(): () => Promise<void> {
 }
 
 function platformServiceFactory(): PlatformService {
-  const os = window.systemInfo().os;
+  const os = window.systemInfo().platform;
 
-  if (os === 'macos') {
+  if (os === 'DARWIN') {
     return new MacosPlatformService();
   }
 
-  if (os === 'linux') {
+  if (os === 'LINUX') {
     return new LinuxPlatformService();
   }
 
