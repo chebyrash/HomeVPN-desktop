@@ -16,6 +16,27 @@
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  position: relative;
+
+  .loading {
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: .5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+    height: 100%;
+    border-radius: 10px;
+    cursor: default;
+    
+    svg {
+      height: 76px;
+    }
+  }
 
   .cap {
     @include font(18px, 18px, 700, #fff);

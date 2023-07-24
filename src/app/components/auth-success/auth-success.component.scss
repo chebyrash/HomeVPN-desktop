@@ -1,0 +1,15 @@
+.success-auth {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+
+    svg {
+        margin-bottom: 10px;
+    }
+
+    .title {
+        font-size: 20px
+    }
+}

@@ -38,6 +38,10 @@ const routes: Routes = [
     loadChildren: () => import('./modules/auth/auth.module').then((m) => m.AuthModule)
   },
   {
+    path: 'success-auth',
+    loadComponent: () => import('./components/auth-success/auth-success.component').then(c => c.AuthSuccessComponent)
+  },
+  {
     path: '**',
     component: PageNotFoundComponent
   }

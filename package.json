@@ -9,7 +9,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "kill_port": "sudo kill $(sudo lsof -t -i:443)",
-    "build_docs": "ng build --output-path docs --base-href https://desktop.homevpn.org/"
+    "build_docs": "ng build --configuration production --output-path docs --base-href https://desktop.homevpn.org/ && cp ./CNAME ./docs/CNAME && cp ./docs/index.html ./docs/404.html"
   },
   "private": true,
   "dependencies": {
@@ -25,7 +25,6 @@
     "@datorama/akita": "^8.0.1",
     "ng-let": "^15.0.2",
     "rxjs": "~7.8.0",
-    "ts-deep-equal": "^1.1.5",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"
   },

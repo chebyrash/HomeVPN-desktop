@@ -6,7 +6,7 @@
 }
 
 @mixin font-mono($size, $lineHeight, $weight, $color) {
-  font-family: "JetBrains Mono";
+  font-family: "JetBrains Mono", monospace;
   @include font($size, $lineHeight, $weight, $color);
 }
 

@@ -6,8 +6,6 @@ import {
   Router,
 } from '@angular/router';
 import { CurrentPlan } from 'src/app/models/interfaces/current-plan.interface';
-import { ToasterService } from 'src/app/services/toastr.service';
-import { ToastType } from 'src/app/components/toaster/enums/toast-type.enum';
 
 @Component({
   selector: 'app-shop-page',
@@ -22,11 +20,12 @@ export class ShopPageComponent {
 
   public readonly planId$ = new BehaviorSubject<string>('');
 
+  public readonly loading$ = new BehaviorSubject<boolean>(false);
+
   constructor(
     private readonly appQuery: AppQuery,
     private readonly appService: AppService,
     private readonly router: Router,
-    private readonly toasterService: ToasterService
   ) {}
 
   public getDuration(minutes: number): string {
@@ -55,17 +54,20 @@ export class ShopPageComponent {
     const planId = this.planId$.getValue();
     const price = this.appQuery.plans.find(plan => plan.id === planId)?.price!;
     const balance = this.appQuery.balance;
+    const country = this.appQuery.country;
+    
+    if (!country) {
+      alert('Select country first!');
+      return;
+    }
     
     if (price > balance) {
-      this.toasterService.showToast({
-        type: ToastType.ERROR,
-        text: 'Insufficient balance',
-        autoClose: 2500
-      });
+      alert('Insufficient balance!');
       return;
     }
     
     if (planId) {
+      this.loading$.next(true);
       this.appService.purchasePlan(planId).pipe(
         switchMap(() => {
           return this.appService.connectionInit();
@@ -74,8 +76,9 @@ export class ShopPageComponent {
           return this.appService.wgUp();
         })
       ).subscribe(() => {
+        this.loading$.next(false);
         this.appService.setConnection('on');
-        this.router.navigate(['/home', { forceConnect: false }]);
+        this.router.navigate(['/home']);
       });
     }
   }

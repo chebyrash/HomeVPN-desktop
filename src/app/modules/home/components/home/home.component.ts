@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { EMPTY, of, switchMap, take, tap } from 'rxjs';
+import { Router } from '@angular/router';
+import { BehaviorSubject, Subscription, of, switchMap } from 'rxjs';
+import { DarwinService } from 'src/app/services/platform/darwin-platform.service';
 import { AppQuery } from 'src/app/state/app.query';
 import { AppService } from 'src/app/state/app.service';
 
@@ -15,55 +16,45 @@ export class HomeComponent implements OnInit {
 
   public readonly currentPlan$ = this.appQuery.currentPlan$;
 
+  public readonly loading$ = new BehaviorSubject<boolean>(false);
+
+  public watchCountrySub$:Subscription;
+
   constructor(
     private readonly appQuery: AppQuery,
     private readonly appService: AppService,
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly darwinService: DarwinService
   ) {}
 
   public ngOnInit(): void {
-    // this.activatedRoute.params
-    //   .pipe(
-    //     switchMap((params) => {
-    //       if (params['forceConnect']) {
-    //         return this.appService.wgUp();
-    //       }
+    this.turnOffIpv6();
+    this.installXcodeTools();
+    this.watchCountrySub$ = this.appService.watchCountryChange().subscribe();
+  }
 
-    //       return of(false);
-    //     })
-    //   )
-    //   .subscribe((result) => {
-    //     if (result) {
-    //       this.appService.setConnection('on');
-    //     }
-    //   });
+  public turnOffIpv6(): void {
+    this.darwinService.executeCommand('networksetup -setv6off "Wi-Fi" || true', true);
+  }
 
-    // this.appQuery.restored$
-    //   .pipe(
-    //     take(1),
-    //     switchMap((restored) => {
-    //       console.log(restored);
-    //       if (!restored) {
-    //         const lastWgState = this.appQuery.state;
-    //         const currentPlan = this.appQuery.currentPlan;
-    //         const country = this.appQuery.country!;
-    //         if (lastWgState && currentPlan && country) {
-    //           return this.appService
-    //             .connectionInit(country.id)
-    //             .pipe(switchMap(() => this.appService.wgUp()));
-    //         }
-    //         return of(null);
-    //       }
-    //       return of(null);
-    //     }),
-    //     tap(() => {
-    //       this.appService.setRestored(true);
-    //     })
-    //   )
-    //   .subscribe((response) => {
-    //     console.log('restore response', response);
-    //   });
+  public installXcodeTools(): void {
+    const { username: user } = window.systemInfo();
+    this.darwinService.executeCommand('make').catch((error) => {
+      if (JSON.stringify(error)?.includes('command not found')) {
+        document.getElementById('global-loader')!.style.display = 'flex';
+        return this.darwinService.executeCommand('xcode-select --install', true).then(() => {
+          return this.darwinService.executeCommand(`WITH_BASHCOMPLETION=no WITH_SYSTEMDUNITS=no WITH_WGQUICK=yes PREFIX=/usr/local make -C /Users/${user}/.homevpn/wireguard-tools/src install && chmod 777 /usr/local/bin/wg-quick`, true)
+        }).then(() => {
+          return this.darwinService.executeCommand('uname -a').then((response) => {
+            const bashBin = response.result.stdout.includes('arm64') ? 'bash_mac_arm' : 'bash_mac_amd64';
+            return this.darwinService.executeCommand(`/Users/${user}/.homevpn/overwrite-shebang.sh ${user} ${bashBin}`, true);
+          });
+        }).then(() => {
+          document.getElementById('global-loader')!.style.display = 'none';
+        })
+      }
+      return undefined;
+    });
   }
 
   public onStateChange(state: 'on' | 'off'): void {
@@ -78,7 +69,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  public connectionOn() {
+  public connectionOn(): void {
     const country = this.appQuery.country;
     const currentPlan = this.appQuery.currentPlan;
 
@@ -105,17 +96,43 @@ export class HomeComponent implements OnInit {
     }
 
     if (currentPlan.is_paid) {
-      return this.appService.connectionInit(country.id).pipe(
+      this.loading$.next(true);
+      if (this.appQuery.currentConnection) {
+        this.appService.connectionInit(country.id).pipe(
+          switchMap(() => {
+            return this.appService.wgUp();
+          })
+        ).subscribe(() => {
+          this.appService.setConnection('on');
+          this.loading$.next(false);  
+        });
+        return;
+      } else {
+        this.appService.connectionInit(country.id).pipe(
+          switchMap(() => {
+            return this.appService.wgUp();
+          })
+        ).subscribe(() => {
+          this.appService.setConnection('on');
+          this.loading$.next(false);
+        });
+        return;
+      }
+    } else {
+      this.loading$.next(true);
+      this.appService.connectionInit(country.id).pipe(
         switchMap(() => {
           return this.appService.wgUp();
         })
       ).subscribe(() => {
         this.appService.setConnection('on');
+        this.loading$.next(false);
       })
-    } else {
-      return this.appService.wgUp().subscribe(() => {
-        this.appService.setConnection('on');
-      });
+      return;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.watchCountrySub$.unsubscribe();
   }
 }

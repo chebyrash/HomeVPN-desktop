@@ -1,16 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Observable, from, tap } from 'rxjs';
+import { EMPTY, Observable, from, of, switchMap, tap } from 'rxjs';
 import { MainResponse } from 'src/app/models/interfaces/main-response.interface';
 import { environment } from 'src/environments/environment';
 import { ConnectResponse } from '../models/interfaces/connect-response.interface';
 import { SystemInfo } from '../models/interfaces/system-info.interface';
-import { ErrorService } from './error.service';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
     private readonly bridge = window.electron;
-
-    constructor() {}
 
     public async init(systemInfo: SystemInfo): Promise<void> {
         try {
@@ -18,12 +15,11 @@ export class ApiService {
                 action: 'init',
                 payload: {
                     baseURL: environment.apiUrl,
-                    timeout: 30000,
+                    timeout: 300000,
                     headers: {
                         "Authorization": `Bearer ${localStorage.getItem('token')}`,
                         "User-Agent": "HomeVPN/desktop",
                         "HomeVPN-App-Version": environment.appVersion,
-                        "HomeVPN-Device-ID": environment.deviceId,
                         "HomeVPN-Device-Model": systemInfo.model,
                         "HomeVPN-Device-OS": systemInfo.os,
                         "HomeVPN-Device-OS-Version": systemInfo.osVersion,
@@ -60,16 +56,22 @@ export class ApiService {
                 'api', 
                 { action: 'post', payload: {url: '/connection/init', data}}
             )
-        ) as Observable<ConnectResponse>;
+        ).pipe(switchMap((response: any) => {
+            if (response.error) {
+                alert('Something went wrong');
+                return EMPTY;
+            }
+            return of(response);
+        })) as Observable<ConnectResponse>;
     }
 
-    public applyCode(code: string): Observable<{ delta: number}> {
+    public applyCode(code: string): Observable<{ delta: number} | {error: string}> {
         return from(
             this.bridge.invoke(
                 'api',
                 { action: 'post', payload: { url: '/promo/apply', data: { code } } }
             )
-        ) as Observable<{ delta: number }>;
+        ) as Observable<{ delta: number } | {error: string}>;
     }
 
     public async overrideUseragent(): Promise<unknown> {

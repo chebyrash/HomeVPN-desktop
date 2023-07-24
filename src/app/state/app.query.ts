@@ -6,6 +6,7 @@ import { combineLatest, filter, map } from 'rxjs';
 import { Country } from '../models/interfaces/country.interface';
 import { CurrentPlan } from '../models/interfaces/current-plan.interface';
 import { Plan } from '../models/interfaces/plan.interface';
+import { CurrentConnection } from '../models/interfaces/current-connection.interface';
 
 @Injectable({
     providedIn: 'root'
@@ -76,8 +77,6 @@ export class AppQuery extends Query<AppState> {
         map(referrals => referrals.show_referral_prompt)
     );
 
-    public restored$ = this.select('restored');
-
     public delta$ = this.referrals$.pipe(map((referrals) => {
         return referrals.delta;
     }));
@@ -88,6 +87,10 @@ export class AppQuery extends Query<AppState> {
 
     get country(): Country | null  {
         return this.getValue().country;
+    }
+
+    get currentConnection(): CurrentConnection | null | undefined {
+        return this.getValue().main?.current_connection;
     }
     
     constructor(protected override store: AppStore) {

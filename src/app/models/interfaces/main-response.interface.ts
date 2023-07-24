@@ -1,4 +1,5 @@
 import { Nullable } from "../types/nullable.type";
+import { CurrentConnection } from "./current-connection.interface";
 import { CurrentPlan } from "./current-plan.interface";
 import { Plan } from "./plan.interface";
 
@@ -26,12 +27,7 @@ export interface MainResponse {
         popular: boolean;
     }>;
     current_plan: Nullable<CurrentPlan>;
-    current_connection: Nullable<{
-        country: string;
-        ip: string;
-        downloaded: number;
-        uploaded: number;
-    }>;
+    current_connection: Nullable<CurrentConnection>;
     referral: {
         code: string;
         link: string;

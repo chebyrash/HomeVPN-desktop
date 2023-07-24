@@ -11,11 +11,13 @@ import { AppService } from 'src/app/state/app.service';
 export class ConnectionComponent implements OnInit {
     @Input() state: 'on' | 'off' = 'off';
 
+    @Input() loading: boolean;
+
     @Output() onStateChange = new EventEmitter<'on' | 'off'>();
 
     constructor() { }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {}
 
     public switch(state: 'on' | 'off'): void {
         this.onStateChange.emit(state === 'on' ? 'off' : 'on');
