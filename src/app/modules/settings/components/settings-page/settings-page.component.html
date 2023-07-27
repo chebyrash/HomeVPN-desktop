@@ -2,6 +2,15 @@
 <div class="content-area">
     <div class="settings-wrapper">
         <app-user-id></app-user-id>
+        <div class="logs">
+            <div class="title">
+                Share logs
+            </div>
+            <div class="description">
+                Click button below to create log file on your Desktop and share it with support 
+            </div>
+            <button class="button" (click)="shareLogs()">Share logs</button>
+        </div>
         <app-version></app-version>
         <div class="logout">
             <div class="caption" *ngIf="authProvider">

@@ -4,6 +4,20 @@ app-language, app-user-id, app-version {
     margin-bottom: 24px;
 }
 
+.logs {
+    margin-bottom: 24px;
+
+    .title {
+        margin-bottom: 8px;
+        @include font(20px, 24px, 700, rgba(0, 0, 0, 0.75));
+      }
+      
+      .description {
+        margin-bottom: 8px;
+        @include font(16px, 19px, 400, #2c2c2e);
+      }
+}
+
 .settings-wrapper {
     padding: 20px 24px;
 }
