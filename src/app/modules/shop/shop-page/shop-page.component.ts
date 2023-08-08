@@ -57,7 +57,11 @@ export class ShopPageComponent {
     const country = this.appQuery.country;
     
     if (!country) {
-      alert('Select country first!');
+      this.loading$.next(true);
+      this.appService.purchasePlan(planId).subscribe(() => {
+        this.loading$.next(false);
+        this.router.navigate(['/home']);
+      })
       return;
     }
     

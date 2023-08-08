@@ -1,23 +1,27 @@
 @font-face {
   font-family: "Inter";
+  font-display: swap;
   font-weight: 700;
   src: url("../assets/fonts/inter/static/Inter-Bold.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "Inter";
+  font-display: swap;
   font-weight: 600;
   src: url("../assets/fonts/inter/static/Inter-SemiBold.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "Inter";
+  font-display: swap;
   font-weight: 400;
   src: url("../assets/fonts/inter/static/Inter-Regular.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "JetBrains Mono";
+  font-display: swap;
   src: url("../assets/fonts/jetbrains_mono/JetBrainsMono-VariableFont_wght.ttf")
     format("truetype");
 }

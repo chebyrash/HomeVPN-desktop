@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Subscription, of, switchMap } from 'rxjs';
+import { BehaviorSubject, Subscription, of, switchMap, tap } from 'rxjs';
 import { DarwinService } from 'src/app/services/platform/darwin-platform.service';
 import { AppQuery } from 'src/app/state/app.query';
 import { AppService } from 'src/app/state/app.service';
@@ -56,6 +56,18 @@ export class HomeComponent implements OnInit {
           
           if (!currentPlan) {
             return this.router.navigate(['/shop']);
+          }
+
+          if (currentPlan) {
+            return this.appService.connectionInit(country.id).pipe(
+              switchMap(() => {
+                return this.appService.wgUp();
+              }),
+              tap(() => {
+                this.appService.setConnection('on');
+                this.loading$.next(false);  
+              })
+            );
           }
 
           return of(null);
