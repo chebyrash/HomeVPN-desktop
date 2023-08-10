@@ -24,7 +24,7 @@ export class AuthGuard implements CanActivate {
             return false;
         }
         const systemInfo = window.systemInfo();
-        if (systemInfo) {
+        if (systemInfo && systemInfo?.user?.uid && systemInfo?.user?.gid) {
             return from(this.apiService.init(window.systemInfo())).pipe(
                 map(() => true)
             );
