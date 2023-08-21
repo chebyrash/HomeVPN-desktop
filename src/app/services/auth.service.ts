@@ -54,6 +54,11 @@ export class AuthService {
       localStorage.setItem("token", data.authorization.id_token);
       this.router.navigate(["home"]);
     } catch (error) {
+      const errMessage = JSON.stringify(error);
+      if (errMessage.includes('popup_closed_by_user')) {
+        return;
+      }
+      
       alert(`Something went wrong: ${JSON.stringify(error)}`);
     }
   }

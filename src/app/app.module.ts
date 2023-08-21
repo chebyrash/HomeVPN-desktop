@@ -13,8 +13,14 @@ import { MainComponent } from './components/main/main.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { SystemInfo } from './models/interfaces/system-info.interface';
+import { environment } from 'src/environments/environment';
 
 function initializeApp(): () => Promise<void> {
+  const frontendAppVersion = localStorage.getItem('version');
+  if (environment.appVersion !== frontendAppVersion) {
+    localStorage.clear();
+  }
+  
   return async () => {
     return window.electron
       .invoke('shell', { action: 'get_system_info' })
