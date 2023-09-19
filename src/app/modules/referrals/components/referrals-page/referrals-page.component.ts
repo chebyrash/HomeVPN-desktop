@@ -9,12 +9,7 @@ import { AppService } from 'src/app/state/app.service';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReferralsPageComponent implements OnInit {
-    public readonly telegram$ = this.appQuery.telegram$;
-    
-    constructor(
-        private readonly appService: AppService,
-        private readonly appQuery: AppQuery
-    ) { }
+    constructor(private readonly appService: AppService) { }
 
     ngOnInit(): void {
         this.appService.loadMain();

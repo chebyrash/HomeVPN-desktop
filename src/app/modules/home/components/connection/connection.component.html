@@ -1,62 +1,16 @@
 <div class="connection" (click)="switch(state)">
     <div class="loading" *ngIf="loading">
-      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: none; display: block; shape-rendering: auto;" width="200px" height="200px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
-        <g transform="rotate(0 50 50)">
-          <rect x="48" y="27.5" rx="1.98" ry="1.98" width="4" height="11" fill="#c2c2c2">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="0.47393364928909953s" begin="-0.43084877208099964s" repeatCount="indefinite"/>
-          </rect>
-        </g><g transform="rotate(32.72727272727273 50 50)">
-          <rect x="48" y="27.5" rx="1.98" ry="1.98" width="4" height="11" fill="#c2c2c2">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="0.47393364928909953s" begin="-0.38776389487289964s" repeatCount="indefinite"/>
-          </rect>
-        </g><g transform="rotate(65.45454545454545 50 50)">
-          <rect x="48" y="27.5" rx="1.98" ry="1.98" width="4" height="11" fill="#c2c2c2">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="0.47393364928909953s" begin="-0.3446790176647997s" repeatCount="indefinite"/>
-          </rect>
-        </g><g transform="rotate(98.18181818181819 50 50)">
-          <rect x="48" y="27.5" rx="1.98" ry="1.98" width="4" height="11" fill="#c2c2c2">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="0.47393364928909953s" begin="-0.30159414045669974s" repeatCount="indefinite"/>
-          </rect>
-        </g><g transform="rotate(130.9090909090909 50 50)">
-          <rect x="48" y="27.5" rx="1.98" ry="1.98" width="4" height="11" fill="#c2c2c2">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="0.47393364928909953s" begin="-0.2585092632485998s" repeatCount="indefinite"/>
-          </rect>
-        </g><g transform="rotate(163.63636363636363 50 50)">
-          <rect x="48" y="27.5" rx="1.98" ry="1.98" width="4" height="11" fill="#c2c2c2">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="0.47393364928909953s" begin="-0.21542438604049982s" repeatCount="indefinite"/>
-          </rect>
-        </g><g transform="rotate(196.36363636363637 50 50)">
-          <rect x="48" y="27.5" rx="1.98" ry="1.98" width="4" height="11" fill="#c2c2c2">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="0.47393364928909953s" begin="-0.17233950883239985s" repeatCount="indefinite"/>
-          </rect>
-        </g><g transform="rotate(229.0909090909091 50 50)">
-          <rect x="48" y="27.5" rx="1.98" ry="1.98" width="4" height="11" fill="#c2c2c2">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="0.47393364928909953s" begin="-0.1292546316242999s" repeatCount="indefinite"/>
-          </rect>
-        </g><g transform="rotate(261.8181818181818 50 50)">
-          <rect x="48" y="27.5" rx="1.98" ry="1.98" width="4" height="11" fill="#c2c2c2">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="0.47393364928909953s" begin="-0.08616975441619992s" repeatCount="indefinite"/>
-          </rect>
-        </g><g transform="rotate(294.54545454545456 50 50)">
-          <rect x="48" y="27.5" rx="1.98" ry="1.98" width="4" height="11" fill="#c2c2c2">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="0.47393364928909953s" begin="-0.04308487720809996s" repeatCount="indefinite"/>
-          </rect>
-        </g><g transform="rotate(327.27272727272725 50 50)">
-          <rect x="48" y="27.5" rx="1.98" ry="1.98" width="4" height="11" fill="#c2c2c2">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="0.47393364928909953s" begin="0s" repeatCount="indefinite"/>
-          </rect>
-        </g>
-      </svg>
+      <app-spinner color="#c2c2c2"></app-spinner>
     </div>
     <div class="cap">
         CONNECTION
     </div>
     <div class="switch">
-        <div class="toggle" [ngClass]="state">
+        <div class="toggle" [class.on]="state === true" [class.off]="state === false">
             <div class="circle"></div>
         </div>
         <div class="letters">
-            <div class="f" [ngClass]="state">
+            <div class="f" [class.on]="state === true" [class.off]="state === false">
                 <svg xmlns="http://www.w3.org/2000/svg" width="47" height="32" viewBox="0 0 47 32" fill="none">
                     <g clip-path="url(#clip0_1411_10548)">
                     <path d="M0 31.7065H8.06396V19.8853H20.3467V13.7109H8.06396V6.48193H21.5771V0H0V31.7065Z" fill="#F2F1EF"/>
@@ -69,7 +23,7 @@
                     </defs>
                 </svg>
             </div>
-            <div class="n" [ngClass]="state">
+            <div class="n" [class.on]="state === true" [class.off]="state === false">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="32" viewBox="0 0 28 32" fill="none">
                     <g clip-path="url(#clip0_1411_10522)">
                     <path d="M0 31.7065H8.04199V13.2056H8.1958L20.9399 31.7065H27.7075V0H19.6655V18.3032H19.5117L6.8335 0H0V31.7065Z" fill="#E7FE54"/>

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { AppQuery } from 'src/app/state/app.query';
 import { AppService } from 'src/app/state/app.service';
 
 @Component({
@@ -8,9 +9,10 @@ import { AppService } from 'src/app/state/app.service';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MainComponent implements OnInit {
-    constructor(private readonly appService: AppService) {}
+    constructor(private readonly appService: AppService, private readonly appQuery: AppQuery) {}
 
     ngOnInit(): void {
         this.appService.loadMain().subscribe();
+        this.appQuery.select().subscribe(console.log);
     }
 }

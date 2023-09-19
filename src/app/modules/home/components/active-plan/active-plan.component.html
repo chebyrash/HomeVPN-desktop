@@ -1,7 +1,7 @@
-<div class="active-plan" *ngIf="connection$ | async as state">
+<div class="active-plan" *ngLet="connection$ | async as state">
     <ng-container *ngIf="currentPlan$ | async as currentPlan">
         <ng-container *ngIf="!currentPlan.is_paid; else paidPlan">
-            <div class="plan" [class.active]="state === 'on'">
+            <div class="plan" [class.active]="state">
                 <div class="info">
                     <div class="plan-code">
                         {{ currentPlan.name }}
@@ -36,7 +36,7 @@
             </div>
             <div class="ip-info">
                 <div class="title">
-                    {{ state === 'on' ? 'IP ADDRESS WITH HOME VPN' : 'IP ADDRESS WITHOUT HOME VPN'}}
+                    {{ state ? 'IP ADDRESS WITH HOME VPN' : 'IP ADDRESS WITHOUT HOME VPN'}}
                 </div>
                 <div class="ip" *ngIf="ipInfo$ | async as ipInfo">
                     {{ getFlagEmoji(ipInfo.country!) }} {{ ipInfo.ip }}
@@ -46,7 +46,7 @@
         </ng-container>
         <ng-template #paidPlan>
             <div class="paid-plan">
-                <div class="plan" [class.active]="state === 'on'">
+                <div class="plan" [class.active]="state">
                     <div>
                         {{ currentPlan.name }}
                     </div>
@@ -56,7 +56,7 @@
                 </div>
                 <div class="ip-info">
                     <div class="title">
-                        {{ state === 'on' ? 'IP ADDRESS WITH HOME VPN' : 'IP ADDRESS WITHOUT HOME VPN'}}
+                        {{ state ? 'IP ADDRESS WITH HOME VPN' : 'IP ADDRESS WITHOUT HOME VPN'}}
                     </div>
                     <div class="ip" *ngIf="ipInfo$ | async as ipInfo">
                         {{ getFlagEmoji(ipInfo.country!) }} {{ ipInfo.ip }}

@@ -14,7 +14,7 @@
         <app-version></app-version>
         <div class="logout">
             <div class="caption" *ngIf="authProvider">
-                You signed in with {{ authProvider }} account
+                You signed in with {{ authProvider.provider }} account
             </div>
             <button class="button" (click)="signOut()">Sign out</button>
         </div>

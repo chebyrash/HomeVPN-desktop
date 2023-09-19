@@ -13,8 +13,8 @@ import { AppService } from 'src/app/state/app.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
 })
-export class CountrySelectorComponent implements OnInit {
-  public readonly countries$ = this.appQuery.countries$;
+export class CountrySelectorComponent {
+  readonly countries$ = this.appQuery.countries$;
 
   constructor(
     private readonly appQuery: AppQuery,
@@ -22,12 +22,8 @@ export class CountrySelectorComponent implements OnInit {
     private readonly dialogRef: DialogRef
   ) {}
 
-  public ngOnInit(): void {
-    this.appService.loadMain().subscribe();
-  }
-
-  public selectCountry(country: Country): void {
+  selectCountry(country: Country): void {
     this.appService.setCountry(country);
-    this.dialogRef.close(country);
+    this.dialogRef.close();
   }
 }

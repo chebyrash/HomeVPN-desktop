@@ -1,8 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { DarwinService } from "./platform/darwin-platform.service";
 import { AppService } from "../state/app.service";
-import { environment } from "src/environments/environment";
+import { AuthProvider } from "../models/interfaces/auth-provider.interface";
 
 declare const AppleID: any;
 
@@ -10,35 +9,37 @@ declare const AppleID: any;
   providedIn: "root",
 })
 export class AuthService {
-  constructor(
-    private readonly router: Router,
-    private readonly darwinService: DarwinService,
-    private readonly appService: AppService
-  ) {
-    window.electron.invoke("google_auth", {
-      action: "init_google_auth",
-      payload: {
-        clientId: environment.googleOauth.id,
-        clientSecret: environment.googleOauth.sec,
-      },
-    })
+  get isAuthenticated(): boolean {
+    const authProvider = localStorage.getItem("authProvider");
+    return authProvider !== null;
   }
 
-  public async googleLogin(): Promise<void> {
-    const response = await window.electron.invoke("google_auth", { action: 'google_auth' });
-    if ((response.error)) {
-      alert(`Something went wrong: ${response.error}, reason: ${response.reason}`);
+  get authProvider(): AuthProvider | null {
+    const authProvider = localStorage.getItem("authProvider");
+    return authProvider ? JSON.parse(authProvider) : null;
+  }
+
+  constructor(
+    private readonly router: Router,
+    private readonly appService: AppService
+  ) {}
+
+  async googleLogin(): Promise<void> {
+    const response = await window.electron.invoke("auth", { action: "google-auth" });
+    if (response.error) {
+      alert(
+        `Something went wrong: ${response.error}, reason: ${response.reason}`
+      );
     } else {
       if (!response) {
-        alert('Something went wrong');
+        alert("Something went wrong");
       }
-      localStorage.setItem("token", response);
-      localStorage.setItem("auth_provider", "Google");
+      this.setAuthProvider({ token: response, provider: "google" });
       this.router.navigate(["home"]);
     }
   }
 
-  public async appleLogin(): Promise<void> {
+  async appleLogin(): Promise<void> {
     try {
       AppleID.auth.init({
         clientId: "desktop.homevpn.signin",
@@ -50,26 +51,31 @@ export class AuthService {
       const data = (await AppleID.auth.signIn()) as {
         authorization: { id_token: string };
       };
-      localStorage.setItem("auth_provider", "Apple");
-      localStorage.setItem("token", data.authorization.id_token);
+      this.setAuthProvider({
+        token: data.authorization.id_token,
+        provider: "apple",
+      });
       this.router.navigate(["home"]);
     } catch (error) {
       const errMessage = JSON.stringify(error);
-      if (errMessage.includes('popup_closed_by_user')) {
+      if (errMessage.includes("popup_closed_by_user")) {
         return;
       }
-      
       alert(`Something went wrong: ${JSON.stringify(error)}`);
     }
   }
 
-  public signOut(): void {
-    localStorage.removeItem("token");
+  setAuthProvider(provider: AuthProvider): void {
+    localStorage.setItem("authProvider", JSON.stringify(provider));
+  }
+
+  clearAuthProvider(): void {
+    localStorage.removeItem("authProvider");
+  }
+
+  signOut(): void {
+    this.clearAuthProvider();
     this.appService.reset();
-    this.router.navigate(["login"]).then(() => {
-      localStorage.removeItem("country");
-      localStorage.removeItem("auth_provider");
-      return this.darwinService.wgDown();
-    });
+    this.router.navigate(["login"]);
   }
 }

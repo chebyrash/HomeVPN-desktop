@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { BehaviorSubject, Subscription, of, switchMap, tap } from "rxjs";
+import { BehaviorSubject, Subject, distinctUntilKeyChanged, filter, from, of, switchMap, takeUntil } from "rxjs";
 import { AppQuery } from "src/app/state/app.query";
 import { AppService } from "src/app/state/app.service";
-import { environment } from "src/environments/environment";
 
 @Component({
   selector: "app-home",
@@ -12,13 +11,13 @@ import { environment } from "src/environments/environment";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit {
-  public readonly state$ = this.appQuery.state$;
+  readonly state$ = this.appQuery.connection$;
 
-  public readonly currentPlan$ = this.appQuery.currentPlan$;
+  readonly currentPlan$ = this.appQuery.currentPlan$;
 
-  public readonly loading$ = new BehaviorSubject<boolean>(false);
+  readonly loading$ = new BehaviorSubject<boolean>(false);
 
-  public watchCountrySub$: Subscription;
+  readonly destroy$ = new Subject<void>();
 
   constructor(
     private readonly appQuery: AppQuery,
@@ -26,111 +25,76 @@ export class HomeComponent implements OnInit {
     private readonly router: Router
   ) {}
 
-  public ngOnInit(): void {
-    localStorage.setItem("version", environment.appVersion);
-    this.watchCountrySub$ = this.appService.watchCountryChange().subscribe();
-  }
-
-  public onStateChange(state: "on" | "off"): void {
-    if (state === "off") {
-      this.appService.wgDown().subscribe(() => {
-        this.appService.setConnection("off");
-      });
-    }
-
-    if (state === "on") {
-      this.connectionOn();
-    }
-  }
-
-  public connectionOn(): void {
-    const country = this.appQuery.country;
-    const currentPlan = this.appQuery.currentPlan;
-
-    if (!country) {
-      this.appService
-        .openCountrySelector()
-        .afterClosed.pipe(
-          switchMap((country) => {
-            if (!country) {
-              return of(null);
-            }
-
-            if (!currentPlan) {
-              return this.router.navigate(["/shop"]);
-            }
-
-            if (currentPlan) {
-              return this.appService.connectionInit(country.id).pipe(
-                switchMap(() => {
-                  return this.appService.wgUp();
-                }),
-                tap(() => {
-                  this.appService.setConnection("on");
-                  this.loading$.next(false);
-                })
-              );
-            }
-
-            return of(null);
-          })
-        )
-        .subscribe();
-      return;
-    }
-
-    if (!currentPlan) {
-      this.router.navigate(["/shop"]);
-      return;
-    }
-
-    if (currentPlan.is_paid) {
-      this.loading$.next(true);
-      if (this.appQuery.currentConnection) {
-        this.appService
-          .connectionInit(country.id)
-          .pipe(
+  ngOnInit(): void {
+    this.appQuery.country$.pipe(
+      filter(Boolean),
+      distinctUntilKeyChanged('id'),
+      switchMap(() => {
+        const currentConnection = this.appQuery.currentConnection;
+        const country = this.appQuery.country;
+        const processPid = this.appQuery.processPid;
+        if (processPid && currentConnection && currentConnection.country !== country?.id) {
+          return from(this.appService.killProcess(false)).pipe(
             switchMap(() => {
-              return this.appService.wgUp();
+              console.log('re-init connection');
+              return this.appService.initializeConnection();
+            }),
+            switchMap(async () => {
+              return this.appService.runCore();
+            }),
+            switchMap(async () => {
+              return this.appService.applyNetworkProxy();
             })
-          )
-          .subscribe(() => {
-            this.appService.setConnection("on");
-            this.loading$.next(false);
-          });
+          );
+        }
+        return of(null);
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();
+  }
+
+  onStateChange(state: boolean): void {
+    if (state) {
+      this.on();
+    } else {
+      this.off();
+    }
+  }
+
+  on(): void {
+    const plan = this.appQuery.currentPlan;
+    const country = this.appQuery.country;
+    const currentConnection = this.appQuery.currentConnection;
+    if (!country) {
+      this.appService.openCountrySelector();
+    }
+
+    if (plan) {
+      if (!currentConnection || currentConnection.country !== country?.id) {
+        this.appService.initializeConnection().pipe(
+          switchMap(async () => this.appService.runCore()),
+          switchMap(async () => this.appService.applyNetworkProxy())
+        ).subscribe();
         return;
       } else {
-        this.appService
-          .connectionInit(country.id)
-          .pipe(
-            switchMap(() => {
-              return this.appService.wgUp();
-            })
-          )
-          .subscribe(() => {
-            this.appService.setConnection("on");
-            this.loading$.next(false);
-          });
+        this.appService.runCore().then(() => {
+          return this.appService.applyNetworkProxy();
+        });
         return;
       }
     } else {
-      this.loading$.next(true);
-      this.appService
-        .connectionInit(country.id)
-        .pipe(
-          switchMap(() => {
-            return this.appService.wgUp();
-          })
-        )
-        .subscribe(() => {
-          this.appService.setConnection("on");
-          this.loading$.next(false);
-        });
+      this.router.navigate(['/shop']);
       return;
     }
   }
 
+  off(): void {
+    this.appService.killProcess().then(() => {
+      return this.appService.disableNetworkProxy();
+    })
+  }
+
   ngOnDestroy(): void {
-    this.watchCountrySub$.unsubscribe();
+    this.destroy$.next();
   }
 }

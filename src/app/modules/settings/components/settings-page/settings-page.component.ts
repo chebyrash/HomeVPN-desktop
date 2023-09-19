@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { AuthService } from "src/app/services/auth.service";
-import { DarwinService } from "src/app/services/platform/darwin-platform.service";
 
 @Component({
   selector: "app-settings-page",
@@ -9,26 +8,26 @@ import { DarwinService } from "src/app/services/platform/darwin-platform.service
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsPageComponent {
-  public readonly authProvider = localStorage.getItem("auth_provider");
+  readonly authProvider = this.authService.authProvider;
 
   constructor(
     private readonly authService: AuthService,
-    private readonly darwinService: DarwinService
   ) {}
 
-  public signOut(): void {
+  signOut(): void {
     this.authService.signOut();
   }
 
-  public shareLogs(): void {
-    const user = window.systemInfo().user.username;
-    this.darwinService
-      .executeCommand(
-        `mv /tmp/homevpn.log /Users/${user}/Desktop/ && install -m 777 /dev/null /tmp/homevpn.log`,
-        true
-      )
-      .then(() => {
-        alert("Done!");
-      });
+  shareLogs(): void {
+    alert("Done!");
+    // const user = window.systemInfo().user.username;
+    // this.darwinService
+    //   .executeCommand(
+    //     `mv /tmp/homevpn.log /Users/vlad/Desktop/ && install -m 777 /dev/null /tmp/homevpn.log`,
+    //     true
+    //   )
+    //   .then(() => {
+    //     alert("Done!");
+    //   });
   }
 }

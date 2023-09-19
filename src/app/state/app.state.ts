@@ -1,16 +1,21 @@
 import { Country } from "../models/interfaces/country.interface";
-import { MainResponse } from "../models/interfaces/main-response.interface";
+import { SystemInfo } from "../models/interfaces/system-info.interface";
+import { MainResponse } from "../models/types/main-response.type";
+import { Nullable } from "../models/utils/nullable.type";
 
-const lastActiveCountry = localStorage.getItem('country');
+export type AppState = {
+  main: Nullable<MainResponse>;
+  country: Nullable<Country>;
+  freePort: Nullable<number>;
+  systemInfo: Nullable<SystemInfo>;
+  processPid: Nullable<number>;
+};
 
-export interface AppState {
-    main: MainResponse | null;
-    connection: 'on' | 'off',
-    country: Country | null,
-}
-
+const country = localStorage.getItem('country');
 export const APP_INITIAL_STATE: AppState = {
-    main: null,
-    connection: 'off',
-    country: lastActiveCountry ? JSON.parse(lastActiveCountry) as Country : null,
-}
+  main: null,
+  country: country ? JSON.parse(country) : null,
+  systemInfo: null,
+  freePort: null,
+  processPid: null,
+};

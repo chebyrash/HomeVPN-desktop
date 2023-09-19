@@ -8,18 +8,14 @@ import { AppService } from 'src/app/state/app.service';
     styleUrls: ['./connection.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ConnectionComponent implements OnInit {
-    @Input() state: 'on' | 'off' = 'off';
+export class ConnectionComponent {
+    @Input() state: boolean = false;
 
     @Input() loading: boolean;
 
-    @Output() onStateChange = new EventEmitter<'on' | 'off'>();
+    @Output() onStateChange = new EventEmitter<boolean>();
 
-    constructor() { }
-
-    ngOnInit(): void {}
-
-    public switch(state: 'on' | 'off'): void {
-        this.onStateChange.emit(state === 'on' ? 'off' : 'on');
+    public switch(state: boolean): void {
+        this.onStateChange.emit(!state);
     }
 }

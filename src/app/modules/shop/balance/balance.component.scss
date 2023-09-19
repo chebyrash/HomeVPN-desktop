@@ -1,0 +1,24 @@
+@import "mixins";
+
+.balance {
+  padding: 24px;
+  background: #000000;
+  border-radius: 20px;
+  position: relative;
+
+  .title {
+    margin-bottom: 8px;
+    @include font(14px, 16px, 600, rgba(255, 255, 255, 0.5));
+  }
+
+  .amount {
+    @include font(57px, 68px, 600, #ffffff);
+  }
+
+  img {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    border-radius: 20px;
+  }
+}

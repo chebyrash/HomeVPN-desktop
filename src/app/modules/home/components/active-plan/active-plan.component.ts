@@ -12,7 +12,7 @@ import { getFlagEmoji } from 'src/app/utils/get-country-flag';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActivePlanComponent implements OnInit {
-    public readonly connection$ = this.appQuery.state$;
+    public readonly connection$ = this.appQuery.connection$;
 
     public readonly currentPlan$ = this.appQuery.currentPlan$;
 
@@ -30,13 +30,14 @@ export class ActivePlanComponent implements OnInit {
                     let timer: string = '';
 
                     if (remainingTime <= 0) {
-                        this.appService.setConnection('off');
-                        return this.appService.wgDown().pipe(
-                            switchMap(() => {
-                                return this.appService.loadMain();
-                            }),
-                            switchMap(() => EMPTY)
-                        );
+                        return EMPTY;
+                        // this.appService.setConnection('off');
+                        // return this.appService.wgDown().pipe(
+                        //     switchMap(() => {
+                        //         return this.appService.loadMain();
+                        //     }),
+                        //     switchMap(() => EMPTY)
+                        // );
                     }
 
                     const daysLeft = Math.trunc(remainingTime / day);

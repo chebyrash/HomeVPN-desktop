@@ -10,6 +10,7 @@ import { CountrySelectorComponent } from '../../components/country-selector/coun
 import { ActivePlanComponent } from './components/active-plan/active-plan.component';
 import { HeaderComponent } from 'src/app/components/header/header.component';
 import { NgLetModule } from 'ng-let';
+import { SpinnerComponent } from 'src/app/components/spinner/spinner.component';
 
 @NgModule({
     declarations: [
@@ -25,7 +26,8 @@ import { NgLetModule } from 'ng-let';
         DialogModule, 
         HeaderComponent,
         CountrySelectorComponent,
-        NgLetModule
+        NgLetModule,
+        SpinnerComponent
     ],
     exports: [],
     providers: [],

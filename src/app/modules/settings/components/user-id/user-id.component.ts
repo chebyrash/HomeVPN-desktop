@@ -8,11 +8,11 @@ import { AppQuery } from 'src/app/state/app.query';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserIdComponent {
-  public readonly userId$ = this.appQuery.userId$;
+  readonly userId$ = this.appQuery.userId$;
 
   constructor(private readonly appQuery: AppQuery) {}
 
-  public async copyUserId(userId: string | null | undefined): Promise<void> {
+  async copyUserId(userId: string | null | undefined): Promise<void> {
     if (userId) {
       await navigator.clipboard.writeText(userId);
       alert('User identifier copied!');
