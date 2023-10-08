@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { BehaviorSubject, Subject, distinctUntilKeyChanged, filter, from, of, switchMap, takeUntil } from "rxjs";
+import { BehaviorSubject, EMPTY, Subject, distinctUntilKeyChanged, filter, from, of, skip, switchMap, takeUntil } from "rxjs";
 import { AppQuery } from "src/app/state/app.query";
 import { AppService } from "src/app/state/app.service";
 
@@ -29,10 +29,15 @@ export class HomeComponent implements OnInit {
     this.appQuery.country$.pipe(
       filter(Boolean),
       distinctUntilKeyChanged('id'),
+      skip(1),
       switchMap(() => {
         const currentConnection = this.appQuery.currentConnection;
         const country = this.appQuery.country;
         const processPid = this.appQuery.processPid;
+        if (country?.id === this.appQuery.origin?.country) {
+          alert('Connect to this country is not allowed');
+          return EMPTY;
+        }
         if (processPid && currentConnection && currentConnection.country !== country?.id) {
           return from(this.appService.killProcess(false)).pipe(
             switchMap(() => {
@@ -69,12 +74,20 @@ export class HomeComponent implements OnInit {
       this.appService.openCountrySelector();
     }
 
+    if (country?.id === this.appQuery.origin?.country) {
+      alert('Connect to this country is not allowed');
+      return;
+    }
+
     if (plan) {
       if (!currentConnection || currentConnection.country !== country?.id) {
+        this.loading$.next(true);
         this.appService.initializeConnection().pipe(
           switchMap(async () => this.appService.runCore()),
           switchMap(async () => this.appService.applyNetworkProxy())
-        ).subscribe();
+        ).subscribe(() => {
+          this.loading$.next(false);
+        });
         return;
       } else {
         this.appService.runCore().then(() => {

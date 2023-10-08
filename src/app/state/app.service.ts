@@ -50,81 +50,15 @@ export class AppService {
 
   loadMain(): Observable<MainResponse> {
     return this.httpChannelService.get<MainResponse>('/main').pipe(
-      catchError((error) => {
-        console.error(error);
-        alert(`Something went wrong: ${error}`);
-        return EMPTY;
-      }),
       tap((main) => {
         console.log({ MAIN: main });
         this.store.update({ main });
+      }),
+      catchError((error) => {
+        alert(`Error: ${error?.message}`);
+        return EMPTY;
       })
     );
-  }
-
-  enableVPN(): Observable<any> {
-    const country = this.appQuery.country;
-    const key = v4();
-    const currentConnection = this.appQuery.currentConnection;
-    const currentPlan = this.appQuery.currentPlan;
-    const origin = this.appQuery.origin;
-    const freePort = this.appQuery.freePort;
-
-    if (origin && origin.country === country?.id) {
-      alert('Not allowed country');
-      return EMPTY;
-    }
-
-    if (true) {
-      return this.httpChannelService.post<ConnectResponse>('/connect/xray', {
-        country: country?.id, key
-      }).pipe(
-        switchMap(connectResponse => {
-          return this.writeConfig(connectResponse.client_config).then(console.log);
-        }),
-        switchMap(async () => {
-          console.log('process pid')
-          if (this.appQuery.processPid) {
-            return this.commandChannelService.kill(this.appQuery.processPid).then(() => {
-              return this.commandChannelService.spawn('core', ['run', '-config=/usr/local/share/homevpn/config.json'])
-                .then((response) => {
-                  console.log(response);
-                  this.store.update({ processPid: response });
-                }).then(() => {
-                  return this.commandChannelService.execute(`/usr/local/share/homevpn/iface_proxy.sh "127.0.0.1" "${freePort}" "on"`, 'daemon');
-                })
-            })
-          }
-          return this.commandChannelService.spawn('core', ['run', '-config=/usr/local/share/homevpn/config.json'])
-            .then((response) => {
-              console.log(response);
-              this.store.update({ processPid: response });
-            }).then(() => {
-              return this.commandChannelService.execute(`/usr/local/share/homevpn/iface_proxy.sh "127.0.0.1" "${freePort}" "on"`, 'daemon');
-            })
-        }),
-      );
-    } else {
-      return from(this.commandChannelService.spawn('core', ['run', '-configdir=/usr/local/share/homevpn/config.json']).then((response) => {
-        this.store.update({ processPid: response.pid });
-      }));
-    }
-  }
-
-  async disableVPN(updatePid = true): Promise<unknown> {
-    const processPid = this.appQuery.processPid;
-    const freePort = this.appQuery.freePort;
-    if (processPid) {
-      return this.commandChannelService.execute(`/usr/local/share/homevpn/iface_proxy.sh 127.0.0.1 ${freePort} "off"`, 'daemon').then(() => {
-        return this.commandChannelService.kill(processPid);
-      }).then(() => {
-        if (updatePid) {
-          this.store.update({ processPid: null });
-        }
-      });
-    }
-
-    return null;
   }
 
   initializeConnection(): Observable<unknown> {
@@ -138,24 +72,49 @@ export class AppService {
       }),
       switchMap(() => {
         return this.loadMain();
-      })
+      }),
     )
   }
 
   async runCore(): Promise<unknown> {
-    return this.commandChannelService.spawn('core', ['run', '-config=/usr/local/share/homevpn/config.json']).then((pid) => {
-      this.store.update({ processPid: pid })
+    const platform = this.appQuery.systemInfo.platform;
+
+    if (platform === 'win') {
+      return this.commandChannelService.spawn(this.appQuery.winCoreExePath, ['run', `-config=${this.appQuery.winCoreConfigPath}`]).then((pid) => {
+        this.store.update({ processPid: pid });
+      });
+    }
+
+    return this.commandChannelService.spawn('/usr/local/bin/core', ['run', '-config=/usr/local/share/homevpn/config.json']).then((pid) => {
+      this.store.update({ processPid: pid });
     });
   }
 
   async applyNetworkProxy(): Promise<unknown> {
     const freePort = this.appQuery.freePort;
-    return this.commandChannelService.execute(`/usr/local/share/homevpn/iface_proxy.sh 127.0.0.1 ${freePort} "on"`, 'daemon');
+    const platform = this.appQuery.systemInfo.platform;
+
+    if (platform === 'win') {
+      const cmd = `netsh winhttp set proxy proxy-server="http=127.0.0.1:${freePort};https=127.0.0.1:${freePort}" bypass-list="<local>" && reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings" /v ProxyEnable /t REG_DWORD /d 1 /f && reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings" /v ProxyServer /t REG_SZ /d "http=127.0.0.1:${freePort};https=127.0.0.1:${freePort}" /f`
+      return this.commandChannelService.execute(
+        cmd,
+        'user'
+      );
+    }
+
+    return this.commandChannelService.execute(
+      `/usr/local/share/homevpn/iface_proxy.sh "127.0.0.1" "${freePort}" "on"`, 
+      'daemon'
+    );
   }
 
   async disableNetworkProxy(): Promise<unknown> {
     const freePort = this.appQuery.freePort;
-    return this.commandChannelService.execute(`/usr/local/share/homevpn/iface_proxy.sh 127.0.0.1 ${freePort} "off"`, 'daemon');
+    const platform = this.appQuery.systemInfo.platform;
+    if (platform === 'win') {
+      return this.commandChannelService.execute(`netsh winhttp reset proxy && reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings" /v ProxyEnable /t REG_DWORD /d 0 /f && reg delete "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings" /v ProxyServer /f`, 'user');
+    }
+    return this.commandChannelService.execute(`/usr/local/share/homevpn/iface_proxy.sh "127.0.0.1" "${freePort}" "off"`, 'daemon');
   }
 
   async killProcess(resetPid = true): Promise<unknown> {
@@ -171,30 +130,62 @@ export class AppService {
   }
 
   async writeConfig(client_config: string): Promise<unknown> {
+    const platform = this.appQuery.systemInfo.platform;
+    const config = platform === 'win' ? this.adjustWindowsConfig(client_config) : this.adjustMacosConfig(client_config);
+
+    if (platform === 'win') {
+      return this.commandChannelService.execute(`powershell -command "Set-Content -Path '${this.appQuery.winCoreConfigPath}' -Value '${config}'"`, 'user');
+    }
+
+    return this.commandChannelService.execute(`echo '${config}' > /usr/local/share/homevpn/config.json && echo 'done'`, 'user');
+  }
+
+  private adjustWindowsConfig(client_config: string): string {
+    const json = JSON.parse(client_config);
     const freePort = this.appQuery.freePort;
-    const config = client_config
+    json.inbounds =  [{
+      "listen": "127.0.0.1",
+      "port": `${freePort}`,
+      "protocol": "http"
+    }];
+    return JSON.stringify(json);
+  }
+
+  private adjustMacosConfig(client_config: string): string {
+    const freePort = this.appQuery.freePort;
+    return client_config
       .replace('SOCKS_PORT', freePort.toString())
       .replace('::1', '127.0.0.1');
-    console.log(config);
-    return this.commandChannelService.execute(`echo '${config}' > /usr/local/share/homevpn/config.json`, 'user');
   }
 
   buyPlan(planId: string): Observable<MainResponse> {
     return this.httpChannelService.post('/plan/purchase', { ID: planId }).pipe(
-      tap(console.log),
-      switchMap(() => this.loadMain())
+      switchMap(() => this.loadMain()),
+      catchError((error) => {
+        alert(`Error: ${error?.message}`);
+        return EMPTY;
+      })
     );
   }
 
   applyReferralLink(link: string): Observable<unknown> {
     const code = link.split('/').pop() as string;
     return this.httpChannelService.post('/promo/apply', {code}).pipe(
+      catchError((error) => {
+        alert(`Error: ${error.message}`);
+        return EMPTY;
+      }),
       tap((response: any) => {
+        alert("Referral code applied!");
         this.store.update((state) => {
           return ({
             ...state,
             main: {
               ...state.main,
+              referral: {
+                ...state.main?.referral,
+                show_referral_prompt: false,
+              },
               balance: (state.main?.balance || 0) + response.delta
             }
           } as AppState);
@@ -219,9 +210,11 @@ export class AppService {
     this.store.update({ country });
   }
 
-  reset(): void {
-    this.disableVPN().then(() => {
-      this.store.reset();
+  async reset(): Promise<void> {
+    return this.disableNetworkProxy().then(() => {
+      return this.killProcess();
+    }).then(() => {
+      this.store.update({ main: null });
     });
   }
 }

@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { EMPTY, Observable, filter, finalize, interval, map, of, startWith, switchMap, take, takeUntil, tap } from 'rxjs';
-import { CurrentPlan } from 'src/app/models/interfaces/current-plan.interface';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { EMPTY, filter, from, interval, of, startWith, switchMap } from 'rxjs';
 import { AppQuery } from 'src/app/state/app.query';
 import { AppService } from 'src/app/state/app.service';
 import { getFlagEmoji } from 'src/app/utils/get-country-flag';
@@ -12,11 +11,11 @@ import { getFlagEmoji } from 'src/app/utils/get-country-flag';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActivePlanComponent implements OnInit {
-    public readonly connection$ = this.appQuery.connection$;
+    readonly connection$ = this.appQuery.connection$;
 
-    public readonly currentPlan$ = this.appQuery.currentPlan$;
+    readonly currentPlan$ = this.appQuery.currentPlan$;
 
-    public readonly timer$ = this.appQuery.currentPlan$.pipe(
+    readonly timer$ = this.appQuery.currentPlan$.pipe(
         filter(Boolean),
         switchMap(plan => {
             return interval(1000).pipe(
@@ -30,14 +29,11 @@ export class ActivePlanComponent implements OnInit {
                     let timer: string = '';
 
                     if (remainingTime <= 0) {
-                        return EMPTY;
-                        // this.appService.setConnection('off');
-                        // return this.appService.wgDown().pipe(
-                        //     switchMap(() => {
-                        //         return this.appService.loadMain();
-                        //     }),
-                        //     switchMap(() => EMPTY)
-                        // );
+                        return from(this.appService.disableNetworkProxy()).pipe(
+                            switchMap(() => this.appService.killProcess()),
+                            switchMap(() => this.appService.loadMain()),
+                            switchMap(() => EMPTY)
+                        )
                     }
 
                     const daysLeft = Math.trunc(remainingTime / day);
@@ -62,9 +58,9 @@ export class ActivePlanComponent implements OnInit {
         })
     );
         
-    public readonly ipInfo$ = this.appQuery.ipInfo$;
+    readonly ipInfo$ = this.appQuery.ipInfo$;
 
-    public readonly getFlagEmoji = getFlagEmoji;
+    readonly getFlagEmoji = getFlagEmoji;
     
     constructor(
         private readonly appQuery: AppQuery,

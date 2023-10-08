@@ -11,6 +11,8 @@ export class AppComponent implements OnInit {
   }
   
   ngOnInit(): void {
-    this.appService.loadSystemInfoAndPort().subscribe();
+    if (!window.location.href.includes('success-auth')) {
+      this.appService.loadSystemInfoAndPort().subscribe();
+    }
   }
 }

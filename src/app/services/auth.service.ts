@@ -75,7 +75,8 @@ export class AuthService {
 
   signOut(): void {
     this.clearAuthProvider();
-    this.appService.reset();
-    this.router.navigate(["login"]);
+    this.appService.reset().then(() => {
+      this.router.navigate(["login"]);
+    });
   }
 }

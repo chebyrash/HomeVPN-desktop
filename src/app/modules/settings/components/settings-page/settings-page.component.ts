@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { AuthService } from "src/app/services/auth.service";
+import { CommandChannelService } from "src/app/services/command-channel.service";
+import { AppQuery } from "src/app/state/app.query";
 
 @Component({
   selector: "app-settings-page",
@@ -12,6 +14,8 @@ export class SettingsPageComponent {
 
   constructor(
     private readonly authService: AuthService,
+    private readonly commandChannelService: CommandChannelService,
+    private readonly appQuery: AppQuery
   ) {}
 
   signOut(): void {
@@ -19,15 +23,12 @@ export class SettingsPageComponent {
   }
 
   shareLogs(): void {
-    alert("Done!");
-    // const user = window.systemInfo().user.username;
-    // this.darwinService
-    //   .executeCommand(
-    //     `mv /tmp/homevpn.log /Users/vlad/Desktop/ && install -m 777 /dev/null /tmp/homevpn.log`,
-    //     true
-    //   )
-    //   .then(() => {
-    //     alert("Done!");
-    //   });
+    const user = this.appQuery.systemInfo.user.username;
+    const supportFilePath = `/Users/${user}/Desktop/homevpn_support`;
+    this.commandChannelService.execute(`rm -rf ${supportFilePath}; cat /tmp/homevpn_daemon.log >> ${supportFilePath}; cat /tmp/homevpn_daemon.err.log >> ${supportFilePath}; cat /tmp/homevpn.log >> ${supportFilePath}; echo 'done'`, 'daemon').then((response) => {
+      alert('Done! Share file homevpn_support with dev team');
+    }).catch(() => {
+      alert('Something went wrong');
+    });
   }
 }

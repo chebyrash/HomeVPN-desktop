@@ -8,5 +8,6 @@ export interface SystemInfo {
         shell: string;
         uid: number;
         username: string;
-    }
+    };
+    winAppDir: string;
 }

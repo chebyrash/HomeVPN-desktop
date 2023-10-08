@@ -117,6 +117,18 @@ export class AppQuery extends Query<AppState> {
     return this.getValue().main?.origin;
   }
 
+  get winAppDir(): string {
+    return this.systemInfo.winAppDir;
+  }
+
+  get winCoreExePath(): string {
+    return this.winAppDir + '\core.exe';
+  }
+
+  get winCoreConfigPath(): string {
+    return this.winAppDir + '\config.json';
+  }
+
   constructor(protected override store: AppStore) {
     super(store);
   }

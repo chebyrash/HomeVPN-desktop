@@ -3,6 +3,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { MainComponent } from './components/main/main.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { AuthGuard } from './guards/auth.guard';
+import { ShopPageComponent } from './modules/shop/shop-page/shop-page.component';
+import { SettingsPageComponent } from './modules/settings/components/settings-page/settings-page.component';
+import { ReferralsPageComponent } from './modules/referrals/components/referrals-page/referrals-page.component';
+import { HomeComponent } from './modules/home/components/home/home.component';
+import { LoginComponent } from './modules/auth/components/login/login.component';
+import { AuthSuccessComponent } from './components/auth-success/auth-success.component';
 
 const routes: Routes = [
   {
@@ -12,19 +18,19 @@ const routes: Routes = [
     children: [
       {
         path: 'home',
-        loadChildren: () => import('./modules/home/home.module').then((m) => m.HomeModule)
+        component: HomeComponent
       },
       {
         path: 'shop',
-        loadChildren: () => import('./modules/shop/shop.module').then((m) => m.ShopModule)
+        component: ShopPageComponent,
       },
       {
         path: 'settings',
-        loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule)
+        component: SettingsPageComponent
       },
       {
         path: 'referrals',
-        loadChildren: () => import('./modules/referrals/referrals.module').then((m) => m.ReferralsModule)
+        component: ReferralsPageComponent
       },
       {
         path: '',
@@ -35,11 +41,11 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    loadChildren: () => import('./modules/auth/auth.module').then((m) => m.AuthModule)
+    component: LoginComponent
   },
   {
     path: 'success-auth',
-    loadComponent: () => import('./components/auth-success/auth-success.component').then(c => c.AuthSuccessComponent)
+    component: AuthSuccessComponent
   },
   {
     path: '**',

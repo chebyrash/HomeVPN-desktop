@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Observable, map } from 'rxjs';
+import { EMPTY, Observable, catchError, map, of, switchMap, throwError } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -23,8 +23,12 @@ export class HttpChannelService {
             action: 'http-request',
             payload: { url, params, method: 'GET' }
         }).pipe(
-            map(response => {
-                return JSON.parse(response);
+            switchMap((response) => {
+                const parsedRes = JSON.parse(response);
+                if (parsedRes?.error) {
+                    return throwError(() => new Error(parsedRes?.error));
+                }
+                return of(parsedRes);
             })
         );
     }
@@ -34,8 +38,12 @@ export class HttpChannelService {
             action: 'http-request',
             payload: { url, body: data, method: 'POST' }
         }).pipe(
-            map(response => {
-                return JSON.parse(response);
+            switchMap((response) => {
+                const parsedRes = JSON.parse(response);
+                if (parsedRes?.error) {
+                    return throwError(() => new Error(parsedRes?.error))
+                }
+                return of(parsedRes);
             })
         )
     }

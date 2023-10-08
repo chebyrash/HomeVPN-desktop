@@ -18,12 +18,13 @@ declare global {
     AppleID: any;
   }
 }
-
-(window as any).electron.invoke$ = (channel: string, message: {
-  action: string,
-  payload?: any
-}) => {
-  return from(window.electron.invoke(channel, message)).pipe(take(1))
+if ((window as any).electron) {
+  (window as any).electron.invoke$ = (channel: string, message: {
+    action: string,
+    payload?: any
+  }) => {
+    return from(window.electron.invoke(channel, message)).pipe(take(1))
+  }
 }
 
 platformBrowserDynamic()

@@ -20,9 +20,7 @@ export class ApplyLinkComponent {
 
   applyLink(): void {
     if (this.link) {
-      this.appService.applyReferralLink(this.link).subscribe(() => {
-        alert("Referral code applied!");
-      });
+      this.appService.applyReferralLink(this.link).subscribe();
     }
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { SystemInfo } from '../models/interfaces/system-info.interface';
 
 @Injectable({
@@ -16,6 +16,10 @@ export class SystemInfoChannelService {
 
     getFreePort(): Observable<number> {
         return window.electron.invoke$<number>('system-info', { action: 'get-free-port'});
+    }
+
+    getWinAppDir(): Observable<string> {
+        return window.electron.invoke$<string>('system-info', { action: 'get-win-app-dir'});
     }
 
     async overrideUserAgent(): Promise<any> {
