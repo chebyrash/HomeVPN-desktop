@@ -12,6 +12,8 @@ import { AppQuery } from "src/app/state/app.query";
 export class SettingsPageComponent {
   readonly authProvider = this.authService.authProvider;
 
+  readonly systemInfo = this.appQuery.systemInfo;
+
   constructor(
     private readonly authService: AuthService,
     private readonly commandChannelService: CommandChannelService,
@@ -25,10 +27,16 @@ export class SettingsPageComponent {
   shareLogs(): void {
     const user = this.appQuery.systemInfo.user.username;
     const supportFilePath = `/Users/${user}/Desktop/homevpn_support`;
-    this.commandChannelService.execute(`rm -rf ${supportFilePath}; cat /tmp/homevpn_daemon.log >> ${supportFilePath}; cat /tmp/homevpn_daemon.err.log >> ${supportFilePath}; cat /tmp/homevpn.log >> ${supportFilePath}; echo 'done'`, 'daemon').then((response) => {
-      alert('Done! Share file homevpn_support with dev team');
-    }).catch(() => {
-      alert('Something went wrong');
-    });
+    this.commandChannelService
+      .execute(
+        `rm -rf ${supportFilePath}; cat /tmp/homevpn_daemon.log >> ${supportFilePath}; cat /tmp/homevpn_daemon.err.log >> ${supportFilePath}; cat /tmp/homevpn.log >> ${supportFilePath}; echo 'done'`,
+        "daemon"
+      )
+      .then((response) => {
+        alert("Done! Share file homevpn_support with dev team");
+      })
+      .catch(() => {
+        alert("Something went wrong");
+      });
   }
 }

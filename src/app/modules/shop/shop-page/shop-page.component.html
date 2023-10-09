@@ -2,7 +2,11 @@
 <div class="content-area">
   <app-balance></app-balance>
   <div class="section-title">Choose plan</div>
-  <div class="plans" *ngLet="currentPlan$ | async as currentPlan" [class.disabled]="currentPlan">
+  <div
+    class="plans"
+    *ngLet="currentPlan$ | async as currentPlan"
+    [class.disabled]="hasActivePlan$ | async"
+  >
     <ng-container *ngIf="plans$ | async as plans">
       <div
         class="plan"
@@ -22,14 +26,20 @@
   </div>
   <div class="buy-points">
     <div class="title">Buy points</div>
-    <div class="text"><a href="https://homevpn.org/" target="_blank">Download</a> mobile application</div>
+    <div class="text">
+      <a href="https://homevpn.org/" target="_blank">Download</a> mobile
+      application
+    </div>
   </div>
   <div class="quick-ads">
     <div class="title">Quick ads</div>
-    <div class="text"><a href="https://homevpn.org/" target="_blank">Download</a> mobile application</div>
+    <div class="text">
+      <a href="https://homevpn.org/" target="_blank">Download</a> mobile
+      application
+    </div>
   </div>
   <div class="connect" *ngIf="planId$ | async" (click)="buy()">
     СONNECT
-    <app-spinner *ngIf="loading$ | async"/>
+    <app-spinner *ngIf="loading$ | async" />
   </div>
 </div>

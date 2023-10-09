@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start:ssl": "sudo ng serve --ssl true --host desktop.homevpn.org --port 443",
+    "start:ssl": "ng serve --ssl true --host desktop.homevpn.org --port 443",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",

@@ -1,22 +1,31 @@
 <app-header [title]="'Settings'"></app-header>
 <div class="content-area">
-    <div class="settings-wrapper">
-        <app-user-id></app-user-id>
-        <div class="logs">
-            <div class="title">
-                Share logs
-            </div>
-            <div class="description">
-                Click button below to create log file on your Desktop and share it with support 
-            </div>
-            <button class="button" (click)="shareLogs()">Share logs</button>
+  <div class="settings-wrapper">
+    <app-user-id></app-user-id>
+    <div class="logs">
+      <div class="title">Share logs</div>
+      <ng-container
+        *ngIf="systemInfo.platform === 'windows'; else unixLogShare"
+      >
+        <div class="description">
+          Open <b>{{ systemInfo.winAppDir }}</b> and share
+          <b>homevpn_log.txt</b> file with support
         </div>
-        <app-version></app-version>
-        <div class="logout">
-            <div class="caption" *ngIf="authProvider">
-                You signed in with {{ authProvider.provider }} account
-            </div>
-            <button class="button" (click)="signOut()">Sign out</button>
+      </ng-container>
+      <ng-template #unixLogShare>
+        <div class="description">
+          Click button below to create log file on your Desktop and share it
+          with support
         </div>
+        <button class="button" (click)="shareLogs()">Share logs</button>
+      </ng-template>
     </div>
+    <app-version></app-version>
+    <div class="logout">
+      <div class="caption" *ngIf="authProvider">
+        You signed in with {{ authProvider.provider }} account
+      </div>
+      <button class="button" (click)="signOut()">Sign out</button>
+    </div>
+  </div>
 </div>

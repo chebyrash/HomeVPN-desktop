@@ -1,7 +1,14 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { AppQuery } from "src/app/state/app.query";
 import { AppService } from "src/app/state/app.service";
-import { BehaviorSubject, EMPTY, catchError, finalize, switchMap } from "rxjs";
+import {
+  BehaviorSubject,
+  EMPTY,
+  catchError,
+  finalize,
+  switchMap,
+  map,
+} from "rxjs";
 import { Router } from "@angular/router";
 import { CurrentPlan } from "src/app/models/interfaces/current-plan.interface";
 
@@ -13,6 +20,12 @@ import { CurrentPlan } from "src/app/models/interfaces/current-plan.interface";
 })
 export class ShopPageComponent {
   readonly plans$ = this.appQuery.plans$;
+
+  readonly hasActivePlan$ = this.appQuery.currentPlan$.pipe(
+    map((currentPlan) => {
+      return currentPlan && currentPlan.end_date_unix * 1000 >= Date.now();
+    })
+  );
 
   readonly currentPlan$ = this.appQuery.currentPlan$;
 
@@ -43,7 +56,7 @@ export class ShopPageComponent {
         result += `${days} days `;
       }
     }
-    
+
     if (hours) {
       result += `${hours} hours `;
     }
@@ -69,38 +82,41 @@ export class ShopPageComponent {
     }
 
     if (country?.id === this.appQuery.origin?.country) {
-      alert('Access to this country is not allowed!');
+      alert("Access to this country is not allowed!");
       return;
     }
 
     if (planId) {
       this.loading$.next(true);
-      this.appService.buyPlan(planId).pipe(
-        switchMap(() => {
-          if (!country) {
-            return this.router.navigate(['/home']);
-          }
+      this.appService
+        .buyPlan(planId)
+        .pipe(
+          switchMap(() => {
+            if (!country) {
+              return this.router.navigate(["/home"]);
+            }
 
-          return this.appService.initializeConnection().pipe(
-            switchMap(() => {
-              return this.appService.runCore();
-            }),
-            switchMap(() => {
-              return this.appService.applyNetworkProxy()
-            }),
-            switchMap(() => {
-              return this.router.navigate(['/home']);
-            }),
-            catchError((error) => {
-              alert(`Error: ${error?.message}`);
-              return EMPTY;
-            })
-          )
-        }),
-        finalize(() => this.loading$.next(false))
-      ).subscribe(() => {
-        this.loading$.next(false);
-      })
+            return this.appService.initializeConnection().pipe(
+              switchMap(() => {
+                return this.appService.runCore();
+              }),
+              switchMap(() => {
+                return this.appService.applyNetworkProxy();
+              }),
+              switchMap(() => {
+                return this.router.navigate(["/home"]);
+              }),
+              catchError((error) => {
+                alert(`Error: ${error?.message}`);
+                return EMPTY;
+              })
+            );
+          }),
+          finalize(() => this.loading$.next(false))
+        )
+        .subscribe(() => {
+          this.loading$.next(false);
+        });
     }
   }
 

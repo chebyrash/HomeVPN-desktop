@@ -1,77 +1,77 @@
-@import 'mixins';
+@import "mixins";
 
 .active-plan {
-    padding: 6px 6px 24px 6px;
-    background: #000;
-    border-radius: 22px;
-    position: relative;
+  padding: 6px 6px 24px 6px;
+  background: #000;
+  border-radius: 22px;
+  position: relative;
 
-    .plan {
-        margin-bottom: 20px;
-        padding: 24px;
-        background: #E1E1E1;
-        border-radius: 20px;
+  .plan {
+    margin-bottom: 20px;
+    padding: 24px;
+    background: #e1e1e1;
+    border-radius: 20px;
 
-        .info {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-bottom: 16px;   
+    .info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 16px;
 
-            .plan-code {
-                @include font(14px, 16px, 600, rgba(0, 0, 0, 0.5));
-            }
-        }
-
-        .timer {
-            font-family: 'JetBrains Mono';
-            font-weight: 600;
-            font-size: 40px;
-            line-height: 52px;
-            font-feature-settings: 'tnum' on, 'lnum' on;
-        }
-
-        &.active {
-            background: #E7FE54;
-
-            .info {
-                color: #000;
-            }
-        }
+      .plan-code {
+        @include font(14px, 16px, 600, rgba(0, 0, 0, 0.5));
+      }
     }
 
-    .ip-info {
-        padding: 0 20px;
-
-        .title {
-            margin-bottom: 8px;
-            @include font(14px, 16px, 600, rgba(255, 255, 255, 0.5));
-        }
-
-        .ip {
-            @include font(16px, 16px, 600, #fff);
-        }
+    .timer {
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 600;
+      font-size: 40px;
+      line-height: 52px;
+      font-feature-settings: "tnum" on, "lnum" on;
     }
 
-    .connection-guys {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        border-bottom-right-radius: 22px;
+    &.active {
+      background: #e7fe54;
+
+      .info {
+        color: #000;
+      }
     }
+  }
+
+  .ip-info {
+    padding: 0 20px;
+
+    .title {
+      margin-bottom: 8px;
+      @include font(14px, 16px, 600, rgba(255, 255, 255, 0.5));
+    }
+
+    .ip {
+      @include font(16px, 16px, 600, #fff);
+    }
+  }
+
+  .connection-guys {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-bottom-right-radius: 22px;
+  }
 }
 
 .paid-plan {
-    .plan {
-        display: flex;
-        justify-content: space-between;
-        font-family: 'Inter';
-        font-style: normal;
-        font-weight: 600;
-        font-size: 14px;
-        line-height: 16px;
-        text-align: center;
-        text-transform: uppercase;
-        color: rgba(0, 0, 0, 0.5);
-    }
+  .plan {
+    display: flex;
+    justify-content: space-between;
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+    text-align: center;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.5);
+  }
 }

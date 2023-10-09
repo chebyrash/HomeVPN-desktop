@@ -20,7 +20,9 @@ export class AppQuery extends Query<AppState> {
 
   readonly countries$ = this.select((state) => state.main?.countries);
 
-  readonly connection$ = this.select("processPid").pipe(map(processPid => (processPid !== null)));
+  readonly connection$ = this.select("processPid").pipe(
+    map((processPid) => processPid !== null)
+  );
 
   readonly currentPlan$ = this.select((state) => state.main?.current_plan);
 
@@ -46,13 +48,11 @@ export class AppQuery extends Query<AppState> {
 
   readonly balance$ = this.select((state) => state.main?.balance);
 
-  readonly telegram$ = this.select(
-    (state) => state.main?.contact.telegram
-  );
+  readonly telegram$ = this.select((state) => state.main?.contact.telegram);
 
-  readonly referrals$ = this.select(
-    (state) => state.main?.referral
-  ).pipe(filter(Boolean));
+  readonly referrals$ = this.select((state) => state.main?.referral).pipe(
+    filter(Boolean)
+  );
 
   readonly referralLink$ = this.referrals$.pipe(
     map((referrals) => referrals.link)
@@ -69,9 +69,7 @@ export class AppQuery extends Query<AppState> {
     map((referrals) => referrals.show_referral_prompt)
   );
 
-  readonly delta$ = this.referrals$.pipe(
-    map((referrals) => referrals.delta)
-  );
+  readonly delta$ = this.referrals$.pipe(map((referrals) => referrals.delta));
 
   get activePlan() {
     return this.getValue().main?.current_plan;
@@ -113,7 +111,7 @@ export class AppQuery extends Query<AppState> {
     return this.getValue().main?.current_plan;
   }
 
-  get origin(): { country: string, ip: string } | undefined {
+  get origin(): { country: string; ip: string } | undefined {
     return this.getValue().main?.origin;
   }
 
@@ -122,11 +120,11 @@ export class AppQuery extends Query<AppState> {
   }
 
   get winCoreExePath(): string {
-    return this.winAppDir + '\core.exe';
+    return this.winAppDir + "\\core.exe";
   }
 
   get winCoreConfigPath(): string {
-    return this.winAppDir + '\config.json';
+    return this.winAppDir + "\\config.json";
   }
 
   constructor(protected override store: AppStore) {

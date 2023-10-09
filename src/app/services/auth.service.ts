@@ -25,17 +25,23 @@ export class AuthService {
   ) {}
 
   async googleLogin(): Promise<void> {
-    const response = await window.electron.invoke("auth", { action: "google-auth" });
-    if (response.error) {
-      alert(
-        `Something went wrong: ${response.error}, reason: ${response.reason}`
-      );
-    } else {
-      if (!response) {
-        alert("Something went wrong");
+    try {
+      const response = await window.electron.invoke("auth", {
+        action: "google-auth",
+      });
+      if (response.error) {
+        alert(
+          `Something went wrong: ${response.error}, reason: ${response.reason}`
+        );
+      } else {
+        if (!response) {
+          alert("Something went wrong");
+        }
+        this.setAuthProvider({ token: response, provider: "google" });
+        this.router.navigate(["home"]);
       }
-      this.setAuthProvider({ token: response, provider: "google" });
-      this.router.navigate(["home"]);
+    } catch (error) {
+      console.log(error);
     }
   }
 
