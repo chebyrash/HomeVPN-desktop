@@ -24,6 +24,7 @@
     "@angular/router": "^16.2.5",
     "@datorama/akita": "^8.0.1",
     "@types/uuid": "^9.0.3",
+    "country-flag-emoji-polyfill": "^0.1.4",
     "ng-let": "^15.0.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

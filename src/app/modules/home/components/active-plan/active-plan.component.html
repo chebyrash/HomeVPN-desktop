@@ -36,7 +36,7 @@
             </div>
             <div class="ip-info">
                 <div class="title">
-                    {{ state ? 'IP ADDRESS WITH HOME VPN' : 'IP ADDRESS WITHOUT HOME VPN'}}
+                    IP ADDRESS
                 </div>
                 <div class="ip" *ngIf="ipInfo$ | async as ipInfo">
                     {{ getFlagEmoji(ipInfo.country!) }} {{ ipInfo.ip }}

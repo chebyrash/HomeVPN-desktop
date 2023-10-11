@@ -2,6 +2,9 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { Observable, from, take } from 'rxjs';
+import { polyfillCountryFlagEmojis } from 'country-flag-emoji-polyfill';
+
+polyfillCountryFlagEmojis()
 
 declare global {
   interface Window {
