@@ -4,10 +4,6 @@ import {
   EMPTY,
   Observable,
   catchError,
-  distinctUntilKeyChanged,
-  filter,
-  from,
-  of,
   switchMap,
   tap,
   zip,
@@ -24,7 +20,7 @@ import { AppState } from "./app.state";
 import { ConnectResponse } from "../models/types/connect-response.type";
 import { CommandChannelService } from "../services/command-channel.service";
 
-// netsh winhttp reset proxy ; reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable /t REG_DWORD /d 0 /f ; reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer /f
+const CONFIG_PATH = "/Applications/HomeVPN.app/Contents/Resources/extraResources/config.json";
 
 @Injectable({
   providedIn: "root",
@@ -98,7 +94,7 @@ export class AppService {
     return this.commandChannelService
       .spawn("/usr/local/bin/core", [
         "run",
-        "-config=/usr/local/share/homevpn/config.json",
+        `-config=${CONFIG_PATH}`,
       ])
       .then((pid) => {
         this.store.update({ processPid: pid });
@@ -115,7 +111,7 @@ export class AppService {
     }
 
     return this.commandChannelService.execute(
-      `/usr/local/share/homevpn/iface_proxy.sh "127.0.0.1" "${freePort}" "on"`,
+      `homevpn_proxy "127.0.0.1" "${freePort}" "on"`,
       "daemon"
     );
   }
@@ -130,7 +126,7 @@ export class AppService {
       );
     }
     return this.commandChannelService.execute(
-      `/usr/local/share/homevpn/iface_proxy.sh "127.0.0.1" "${freePort}" "off"`,
+      `homevpn_proxy "127.0.0.1" "${freePort}" "off"`,
       "daemon"
     );
   }
@@ -163,7 +159,7 @@ export class AppService {
     }
 
     return this.commandChannelService.execute(
-      `echo '${config}' > /usr/local/share/homevpn/config.json && echo 'done'`,
+      `echo '${config}' > ${CONFIG_PATH} && echo 'done'`,
       "user"
     );
   }
