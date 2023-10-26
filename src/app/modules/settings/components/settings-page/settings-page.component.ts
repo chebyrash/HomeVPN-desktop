@@ -27,12 +27,15 @@ export class SettingsPageComponent {
   shareLogs(): void {
     const user = this.appQuery.systemInfo.user.username;
     const supportFilePath = `/Users/${user}/Desktop/homevpn_support`;
+    const appLogPath = '/var/log/homevpn/homevpn_app.log';
+    const daemonErrLog = '/var/log/homevpn/homevpn_daemon.err.log';
+    const daemonLog = '/var/log/homevpn/homevpn_daemon.log';
     this.commandChannelService
       .execute(
-        `rm -rf ${supportFilePath}; cat /tmp/homevpn_daemon.log >> ${supportFilePath}; cat /tmp/homevpn_daemon.err.log >> ${supportFilePath}; cat /tmp/homevpn.log >> ${supportFilePath}; echo 'done'`,
+        `rm -rf ${supportFilePath}; cat ${appLogPath} >> ${supportFilePath}; cat ${daemonErrLog} >> ${supportFilePath}; cat ${daemonLog} >> ${supportFilePath}; echo 'done'`,
         "daemon"
       )
-      .then((response) => {
+      .then(() => {
         alert("Done! Share file homevpn_support with dev team");
       })
       .catch(() => {
