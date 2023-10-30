@@ -82,7 +82,7 @@ export class AuthService {
   signOut(): void {
     this.clearAuthProvider();
     this.appService.reset().then(() => {
-      window.location.assign('https://desktop.homevpn.org/v2/login');
+      this.router.navigate(['/login']);
     });
   }
 }
