@@ -6,7 +6,6 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { MainComponent } from "./components/main/main.component";
 import { NavigationComponent } from "./components/navigation/navigation.component";
-import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
 import { AuthModule } from "./modules/auth/auth.module";
 import { HomeModule } from "./modules/home/home.module";
 import { ReferralsModule } from "./modules/referrals/referrals.module";
@@ -19,7 +18,6 @@ import { AuthSuccessComponent } from "./components/auth-success/auth-success.com
     AppComponent,
     MainComponent,
     NavigationComponent,
-    PageNotFoundComponent,
   ],
   imports: [
     BrowserModule, 

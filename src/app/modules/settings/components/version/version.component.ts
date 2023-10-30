@@ -8,5 +8,5 @@ import { environment } from 'src/environments/environment';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VersionComponent {
-  public readonly appVersion = '0.01';
+  public readonly appVersion = '1.0.0';
 }

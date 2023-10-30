@@ -52,7 +52,7 @@ export class AuthService {
         state: "Initial user authentication request",
         nonce: "test",
         usePopup: true,
-        redirectURI: "https://desktop.homevpn.org/login",
+        redirectURI: "https://desktop.homevpn.org/v2/login",
       });
       const data = (await AppleID.auth.signIn()) as {
         authorization: { id_token: string };
@@ -82,7 +82,7 @@ export class AuthService {
   signOut(): void {
     this.clearAuthProvider();
     this.appService.reset().then(() => {
-      this.router.navigate(["login"]);
+      window.location.assign('https://desktop.homevpn.org/v2/login');
     });
   }
 }
